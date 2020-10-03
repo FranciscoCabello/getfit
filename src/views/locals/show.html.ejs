@@ -1,0 +1,29 @@
+<h1>
+    <%= local.name %>
+</h1>
+<p>
+    <%= local.ubicacion %>
+</p>
+<img src='<%= local.photo %>' width="800" height="400" />
+<br>
+<br>
+<ul>
+    <% comms.forEach((coments) => { %>
+        <h5><%= coments.tipo %></h5>
+        <li><%= coments.comentario %></li>
+    <% }); %>
+</ul>
+<form method='POST' action="<%= deleteLocalPath(local) %>">
+    <div class='actions'>
+        <input type="hidden" name="_method" value="delete" />
+        <input class="profeditt" type="submit" value="Eliminar" />
+    </div>
+</form>
+<form method='GET' action="<%= editLocalPath(local) %>">
+    <div class='actions'>
+        <input type="hidden" name="_method" value="patch" />
+        <input class="profeditt" type="submit" value="Editar" />
+    </div>
+</form>
+<br>
+<a href='<%= localsPath %>'> Volver a página principal </a>

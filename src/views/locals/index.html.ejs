@@ -1,0 +1,20 @@
+<a href='<%= newLocalPath %>'>Crear nuevo local</a>
+
+<p>
+    <%= quantity %>
+</p>
+
+<% locals.forEach(local => {%>
+    <div>
+        <h2>
+            <%= local.name %>
+        </h2>
+        <p>
+            <%= local.ubicacion %>
+        </p>
+        <a href='<%= localPath(local.id) %>'>Ver más</a>
+    </div>
+    <% }) %>
+
+<br>
+<a href='<%= index %>'>Home</a>

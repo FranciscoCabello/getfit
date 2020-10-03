@@ -1,0 +1,15 @@
+<a href='<%= newRequestPath %>'>Crear nueva solicitud</a>
+
+<% requests.forEach(request => {%>
+    <div>
+        <h2>
+            <%= request.tipo %>
+        </h2>
+        <p>
+            <%= request.comentario %>
+        </p>
+        <p>Local: <%=localsNames[request.localId]%></p>
+        <a href='<%= requestPath(request.id) %>'>Ver más</a>
+    </div>
+    <% }) %>
+<a href='<%= index %>'>Home</a>

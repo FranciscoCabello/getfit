@@ -1,0 +1,15 @@
+<a href='<%= newActivityPath %>'>Crear nueva actividad</a>
+
+<ul>
+<% activities.forEach(activity => { %>
+    <li>
+        <div>
+            <h2><%=activity.name%></h2>
+            <p>Dificultad: <%=activity.dificulty%></p>
+            <p>Local: <%=localsNames[activity.localId]%></p>
+        </div>
+    </li>
+<% }) %>
+</ul>
+<br>
+<a href='<%= index %>'>Home</a>

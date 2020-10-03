@@ -1,0 +1,7 @@
+<ul>
+    <% locals.forEach((local) => { %>
+
+        <li><a href='<%= localsPath(local.id) %>'><%= local.name%></a></li>
+
+    <% }); %>
+</ul>

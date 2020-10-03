@@ -1,0 +1,49 @@
+<h1>Datos perfil usuario</h1>
+<ul>
+    <li>Nombre: <%= user.name %></li>
+    <li>Apellido: <%= user.lastname %></li>
+    <li>Email: <%= user.email %></li>
+    <li>Telefono: <%= user.phone %></li>
+    <li>Foto: <%= user.photo %></li>
+</ul>
+<a href='<%= pathForm %>'>Actualizar perfil</a>
+<br>
+<h2>Inscripciones en locales</h2>
+<ul>
+    <% suscription.forEach((suscript) => { %>
+        <li>
+            <div>
+                <p><%= suscript.name %></p>
+            </div>
+        </li>
+    <% }); %>
+</ul>
+<h2>Actividades inscritas</h2>
+<ul>
+    <% user.activities.forEach((activity) => { %>
+        <li>
+            <div>
+                <h2><%= activity.name %></h2>
+                <p>Dificultad: <%= activity.dificulty %></p>
+            </div>
+        </li>
+    <% }); %>
+</ul>
+<h2>Propietario de</h2>
+<ul>
+    <% ownLocals.forEach((local) => { %>
+        <li>
+            <div>
+                <p><%= local.name; %></p>
+            </div>
+        </li>
+    <% }); %>
+</ul>
+<form method='post' action='<%= del %>'>
+    <div class='actions'>
+        <input type='submit' value='Elminar usuario'/>
+    </div>
+
+</form>
+<a href='<%= index %>'>Volver a usuarios</a>
+

@@ -1,0 +1,19 @@
+<form method='post' action='<%= relationPath %>'>
+    <div class='field'>
+      <select type='number' name='localid'>
+      <% locals.forEach((local) => { %>
+        <option value='<%= local.id %>'><%= local.name %></option>
+      <% }); %>
+      </select>
+    </div>
+    <div class='field'>
+        <select type='number' name='userid'>
+        <% users.forEach((user) => { %>
+          <option value='<%= user.id %>'><%= user.email %></option>
+        <% }); %>
+        </select>
+      </div>
+    <div class='actions'>
+      <input type='submit' value='Sign up'/>
+    </div>
+  </form>

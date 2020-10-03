@@ -1,0 +1,5 @@
+<ul>
+    <% users.forEach((user) => { %>
+        <li><a href='<%= usersPath(user.id) %>'><%= user.email %></a></li>
+    <% }) %>
+</ul>

@@ -1,0 +1,4 @@
+DB_USERNAME=getfit
+DB_PASSWORD=getfit
+DB_DIALECT=postgres
+DB_NAME=getfit
