@@ -20,6 +20,11 @@ const config = {
   production: {
     extend: 'default',
     use_env_variable: 'DATABASE_URL',
+    username: 'lulqplcthrvklm',
+    password: '22ac1defe97bf6dd45a339ce2c221d6f4419ab9181cf11a9ae7c5078eb84d274',
+    dialect: 'postgres',
+    database: 'd3c99hn2ajcml3',
+    host: 'ec2-34-231-56-78.compute-1.amazonaws.com',
   },
 };
 
