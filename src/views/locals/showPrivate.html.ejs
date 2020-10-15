@@ -1,0 +1,77 @@
+<main>
+    <h1>
+        <%= local.name %>
+    </h1>
+    <div class="priv-local-info">
+        <section>
+            <p><strong>Dirección:</strong>
+                <%= local.ubicacion %>
+            </p>
+            <p><strong>Horario apertura:</strong>
+                <%= local.horarioA %>
+            </p>
+            <p><strong>Horario cierre:</strong>
+                <%= local.horarioC %>
+            </p>
+        </section>
+        <h2>Actividades</h2>
+        <div>
+            <% activitiesList.forEach((activity) => { %>
+                <article>
+                    <p><strong>Nombre:</strong>
+                        <%= activity.name %>
+                    </p>
+                    <p><strong>Dificultad:</strong>
+                        <%= activity.dificulty %>
+                    </p>
+                    <p><strong>Capacidad</strong>
+                        <%= activity.capacity %>
+                    </p>
+                    <p><strong>Horario</strong>
+                        <%= activity.horarioI %> -
+                            <%= activity.horarioT %>
+                    </p>
+                    <p>
+                        <form method="get" action="<%= editActivityPath(local.id, activity.id) %>"><input type="submit" value="Edit activity"></input>
+                        </form>
+                    </p>
+                    <p>
+                        <form method="post" action="<%= deleteActivityPath(local.id, activity.id) %>"><input type="submit" value="Delete activity"></input>
+                        </form>
+                    </p>
+                </article>
+                <% }); %>
+        </div>
+        <% if (comms.length > 0) {%>
+            <h2>Comentarios:</h2>
+            <div>
+                <% comms.forEach((coment) => { %>
+                    <article>
+                        <p><strong>Tipo:</strong>
+                            <%= coment.tipo %>
+                        </p>
+                        <p><strong>Comentario:</strong>
+                            <%= coment.comentario %>
+                        </p>
+                        <p>
+                            <form method="post" action="<%= deleteCommentPath(coment.id) %>"><input type="submit" value="Eliminar"></input>
+                            </form>
+                        </p>
+                    </article>
+                    <% }); %>
+            </div>
+            <% } %>
+                <form method="get" action="<%= createActivitiesPath %>">
+                    <input type='submit' value="Crear actividad" />
+                </form>
+                <form method="get" action="<%= editLocalPath %>">
+                    <input type='submit' value="Editar info del local" />
+                </form>
+                <form method="post" action="<%= deleteLocalPath %>">
+                    <input type='submit' value='Delete local' />
+                </form>
+                <form method="get" action="<%= userProfilePath %>">
+                    <input type='submit' value="Volver al perfil" />
+                </form>
+    </div>
+</main>

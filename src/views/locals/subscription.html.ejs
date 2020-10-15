@@ -1,0 +1,14 @@
+
+<main>
+    <h1>Suscripciones</h1>
+    <div class="locals-container">
+        <% listLocals.forEach((local) => { %>
+            <section>
+                <%= local.name %> --
+                    <a href="<%= showLocalPath(local.id) %>">Ver local</a> --
+                    <a href="<%= showActivitiesPath(local.id) %>">Mostrar actividades</a> --
+                    <form method="post" action="<%= deleteSubscriptionPath(local.id) %>"><input type="submit" value="Eliminar suscripcion" /></form>
+            </section>
+            <% }); %>
+    </div>
+</main>

@@ -1,3 +1,4 @@
+
 <form method='post' action="<%= createRequestPath %>">
     <% if (locals.errors){ %>
         <div class='errors'>
@@ -14,21 +15,23 @@
         <% } %>
             <div class='field'>
                 <label for='tipo'>Tipo</label>
-                <input type='text' id='tipo' name='tipo' value="<%= request.tipo %>" />
-            </div>
-            <div class='field'>
-                <label for='comentario'>Comentario</label>
-                <textarea name="comentario" id='comentario' cols="30" rows="4"></textarea>
-            </div>
-            <div>
-                <select type='number' name='localId'>
-                    <% locals.forEach((local) => { %>
-                        <option value='<%= local.id %>'><%= local.name %></option>
-                    <% }); %>
+                <select name="tipo">
+                    <option value="Atencion">Atencion</option>
+                    <option value="Disponibilidad">Disponibilidad</option>
+                    <option value="Higiene">Higiene</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Infraestructura">Infraestructura</option>
+                    <option value="Seguridad">Seguridad</option>
+                    <option value="Ventilacion">Ventilacion</option>
+                    <option value="Otros">Otros</option>
                 </select>
-            </div>
-            <div class='actions'>
-                <input type='submit' value='Crear' />
-            </div>
-</form>
-<a href='<%= requestsPath %>'> Volver a página principal </a>
+                <div class='field'>
+                    <label for='comentario'>Comentario</label>
+                    <textarea name="comentario" id='comentario' cols="30" rows="4" placeholder="Ejemplo: Excelente servicio!"></textarea>
+                </div>
+                <div class='actions'>
+                    <input type='submit' value='Crear' />
+                </div>
+    </form>
+    <a href='<%= localPath %>'> Volver al local </a>
+</main>

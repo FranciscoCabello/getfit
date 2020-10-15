@@ -14,6 +14,27 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
       },
     },
+    capacity: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    horarioI: {
+      type: DataTypes.TIME,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    horarioT: {
+      type: DataTypes.TIME,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
   }, {});
 
   activities.associate = (models) => {

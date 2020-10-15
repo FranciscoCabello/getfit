@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('activities', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('products', {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -10,10 +10,22 @@ module.exports = {
     name: {
       type: Sequelize.STRING,
     },
-    dificulty: {
+    precio: {
       type: Sequelize.INTEGER,
     },
-    localId: {
+    tipo: {
+      type: Sequelize.STRING,
+    },
+    estado: {
+      type: Sequelize.STRING,
+    },
+    foto: {
+      type: Sequelize.STRING,
+    },
+    descripcion: {
+      type: Sequelize.TEXT,
+    },
+    userId: {
       type: Sequelize.INTEGER,
     },
 
@@ -27,5 +39,5 @@ module.exports = {
     },
   }),
 
-  down: (queryInterface) => queryInterface.dropTable('activities'),
+  down: (queryInterface) => queryInterface.dropTable('products'),
 };

@@ -1,19 +1,21 @@
-<form method='post' action='<%= relationPath %>'>
-    <div class='field'>
-      <select type='number' name='activityid'>
+<main>
+    <form method='post' action='<%= relationPath %>'>
+        <div class='field'>
+            <select type='number' name='activityid'>
       <% activities.forEach((activity) => { %>
         <option value='<%= activity.id %>'><%= activity.name %> - <%= localid[activity.localId] %></option>
       <% }); %>
       </select>
-    </div>
-    <div class='field'>
-        <select type='number' name='userid'>
+        </div>
+        <div class='field'>
+            <select type='number' name='userid'>
         <% users.forEach((user) => { %>
           <option value='<%= user.id %>'><%= user.email %></option>
         <% }); %>
         </select>
-      </div>
-    <div class='actions'>
-      <input type='submit' value='Subscribe'/>
-    </div>
-</form>
+        </div>
+        <div class='actions'>
+            <input type='submit' value='Subscribe' />
+        </div>
+    </form>
+</main>

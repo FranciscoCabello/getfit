@@ -17,10 +17,6 @@ async function localsNames(ctx, next) {
   });
   return next();
 }
-async function loadRequest(ctx, next) {
-  ctx.state.request = await ctx.orm.requests.findByPk(ctx.params.id);
-  return next();
-}
 
 router.get('requests', '/', localsNames, async (ctx) => {
   const requests = await ctx.orm.requests.findAll();
@@ -33,66 +29,37 @@ router.get('requests', '/', localsNames, async (ctx) => {
   });
 });
 
-router.get('requests-new', '/new', async (ctx) => {
-  const locals = await ctx.orm.locals.findAll();
+router.get('requests-new', '/:id/create', async (ctx) => {
   const request = ctx.orm.requests.build();
   return ctx.render('requests/new', {
     request,
-    locals,
-    createRequestPath: ctx.router.url('requests-create'),
-    requestsPath: ctx.router.url('requests'),
+    createRequestPath: ctx.router.url('requests-create', ctx.params.id),
+    localPath: ctx.router.url('viewLocalPublic', ctx.params.id),
   });
 });
 
-router.post('requests-create', '/', async (ctx) => {
-  console.log(ctx.request.body);
-  const request = ctx.orm.requests.build(ctx.request.body);
-
+router.post('requests-create', '/:id/creating', async (ctx) => {
+  const request = await ctx.orm.requests.build({
+    tipo: ctx.request.body.tipo,
+    comentario: ctx.request.body.comentario,
+    localId: ctx.params.id,
+  });
   try {
     await request.save({ fields: PERMITTED_FIELDS });
-    ctx.redirect(ctx.router.url('requests'));
+    ctx.redirect(ctx.router.url('viewLocalPublic', ctx.params.id));
   } catch (error) {
-    const locals = await ctx.orm.locals.findAll();
     await ctx.render('requests/new', {
-      request,
-      locals,
       errors: error.errors,
-      index: ctx.router.url('index'),
-      createRequestPath: ctx.router.url('requests-create'),
+      request,
+      createRequestPath: ctx.router.url('requests-create', ctx.params.id),
+      localPath: ctx.router.url('viewLocalPublic', ctx.params.id),
     });
   }
 });
 
-router.get('request', '/:id', loadRequest, (ctx) => {
-  const { request } = ctx.state;
-  return ctx.render('requests/show', {
-    request,
-    requestsPath: ctx.router.url('requests'),
-    editRequestPath: (request) => ctx.router.url('requests-edit', { id: request.id }),
-    deleteRequestPath: (request) => ctx.router.url('requests-destroy', { id: request.id }),
-  });
-});
-
-router.get('requests-edit', '/:id/edit', loadRequest, async (ctx) => {
-  const { request } = ctx.state;
-  await ctx.render('requests/edit', {
-    request,
-    updateRequestPath: (request) => ctx.router.url('requests-update', { id: request.id }),
-    requestsPath: ctx.router.url('requests'),
-  });
-});
-
-router.patch('requests-update', '/:id', loadRequest, async (ctx) => {
-  const { request } = ctx.state;
-  const fields = ctx.request.body;
-  await request.update(fields);
-  ctx.redirect(ctx.router.url('requests'));
-});
-
-router.del('requests-destroy', '/:id', loadRequest, async (ctx) => {
-  const { request } = ctx.state;
-  await request.destroy();
-  ctx.redirect(ctx.router.url('requests'));
+router.post('requests-destroy', '/:idLocal/:idComment/delete', async (ctx) => {
+  await ctx.orm.requests.destroy({ where: { id: ctx.params.idComment } });
+  ctx.redirect(ctx.router.url('viewLocalOwner', ctx.params.idLocal));
 });
 
 module.exports = router;

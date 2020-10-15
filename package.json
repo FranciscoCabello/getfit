@@ -44,11 +44,14 @@
     "webpack-manifest-plugin": "^2.2.0"
   },
   "dependencies": {
+    "bcrypt": "^5.0.0",
+    "bcryptjs": "^2.4.3",
     "core-js": "^3.6.5",
     "dotenv": "^8.2.0",
     "koa": "^2.13.0",
     "koa-body": "^4.2.0",
     "koa-ejs": "^4.3.0",
+    "koa-encrypted-session": "^3.0.1",
     "koa-flash-message": "^0.1.6",
     "koa-logger": "^3.2.1",
     "koa-override-method": "^1.0.0",

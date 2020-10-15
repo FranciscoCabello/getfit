@@ -1,5 +1,18 @@
-<ul>
-    <% users.forEach((user) => { %>
-        <li><a href='<%= usersPath(user.id) %>'><%= user.email %></a></li>
-    <% }) %>
-</ul>
+<main>
+    <% if (error) {%>
+        <P>Error
+            <%= error %>
+        </P>
+        <% } %>
+            <form method='post' action="<%= loginPath %>">
+                <div class='field'>
+                    Email: <input type='text' name='email' placeholder='example@example.com' />
+                </div>
+                <div class='field'>
+                    Password: <input type='password' name='password' placeholder='*********' />
+                </div>
+                <div class='actions'>
+                    <input type='submit' value='Log in' />
+                </div>
+            </form>
+</main>

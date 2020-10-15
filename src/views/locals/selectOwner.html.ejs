@@ -1,7 +1,14 @@
-<ul>
-    <% users.forEach((user) => { %>
+<main>
+    <ul>
+        <% users.forEach((user) => { %>
 
-        <li><a href='<%= localNewPath(user.id) %>'><%= user.name%> <%= user.lastname%></a></li>
+            <li>
+                <a href='<%= localNewPath(user.id) %>'>
+                    <%= user.name%>
+                        <%= user.lastname%>
+                </a>
+            </li>
 
-    <% }); %>
-</ul>
+            <% }); %>
+    </ul>
+</main>

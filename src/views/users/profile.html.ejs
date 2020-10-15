@@ -1,49 +1,100 @@
-<h1>Datos perfil usuario</h1>
-<ul>
-    <li>Nombre: <%= user.name %></li>
-    <li>Apellido: <%= user.lastname %></li>
-    <li>Email: <%= user.email %></li>
-    <li>Telefono: <%= user.phone %></li>
-    <li>Foto: <%= user.photo %></li>
-</ul>
-<a href='<%= pathForm %>'>Actualizar perfil</a>
-<br>
-<h2>Inscripciones en locales</h2>
-<ul>
-    <% suscription.forEach((suscript) => { %>
-        <li>
-            <div>
-                <p><%= suscript.name %></p>
-            </div>
-        </li>
-    <% }); %>
-</ul>
-<h2>Actividades inscritas</h2>
-<ul>
-    <% user.activities.forEach((activity) => { %>
-        <li>
-            <div>
-                <h2><%= activity.name %></h2>
-                <p>Dificultad: <%= activity.dificulty %></p>
-            </div>
-        </li>
-    <% }); %>
-</ul>
-<h2>Propietario de</h2>
-<ul>
-    <% ownLocals.forEach((local) => { %>
-        <li>
-            <div>
-                <p><%= local.name; %></p>
-            </div>
-        </li>
-    <% }); %>
-</ul>
-<form method='post' action='<%= del %>'>
-    <div class='actions'>
-        <input type='submit' value='Elminar usuario'/>
+<main>
+    <h1>Datos perfil usuario</h1>
+    <div class="user-profile-big">
+        <div class="user-profile">
+            <section class="datos">
+                <p>
+                    <img src="<%= user.photo %>" width="200" height="210" />
+                </p>
+            </section>
+            <section class="datos">
+                <p>
+                    <strong>Nombre:</strong>
+                    <%= user.name %>
+                </p>
+                <p>
+                    <strong>Apellido:</strong>
+                    <%= user.lastname %>
+                </p>
+                <p>
+                    <strong>Email:</strong>
+                    <%= user.email %>
+                </p>
+                <p>
+                    <strong>Teléfono:</strong>
+                    <%= user.phone %>
+                </p>
+                <a href='<%= pathForm %>'>Actualizar perfil</a>
+            </section>
+        </div>
+        <div class="user-data">
+            <section>
+                <h2>Inscripciones en locales</h2>
+                <ul>
+                    <li>
+                        <a href="<%= subscriptionLocalPath %>">Ver locales con suscripcion</a>
+                    </li>
+
+                </ul>
+            </section>
+            <section>
+                <h2>Actividades inscritas</h2>
+                <ul>
+                    <li>
+                        <a href="<%= subscriptionActivitiesPath %>">Ver actividades inscritas</a>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h2>Propietario de</h2>
+                <ul>
+                    <% ownedLocals.forEach((local) => { %>
+                        <li>
+                            <div>
+                                <p>
+                                    <%= local.name; %>
+                                </p>
+                                <a href="<%=  viewLocalOwnerPath(local.id) %>">Ir al local como propietario</a>
+                            </div>
+                        </li>
+                        <% }); %>
+                </ul>
+            </section>
+            <section>
+                <h2>Productos en venta</h2>
+                <ul>
+                    <% products.forEach((product) => { %>
+                        <li>
+                            <div>
+                                <p><strong>Producto:</strong>
+                                    <%= product.name %>
+                                </p>
+                                <p><strong>Precio:</strong>
+                                    <%= product.precio %>
+                                </p>
+                                <p><strong>Tipo:</strong>
+                                    <%= product.tipo %>
+                                </p>
+                                <p><strong>Estado:</strong>
+                                    <%= product.estado %>
+                                </p>
+                                <p><strong>Descripcion</strong>
+                                    <%= product.descripcion %>
+                                </p>
+                                <form method="post" action="<%= destroyProductPath(product.id) %>"><input type='submit' value='Eliminar' /></form>
+                            </div>
+                        </li>
+                    <% }); %>
+                </ul>
+            </section>
+        </div>
+        <div>
+            <form method='post' action='<%= del %>'>
+                <div class='actions'>
+                    <input type='submit' value='Elminar usuario' />
+                </div>
+
+            </form>
+        </div>
     </div>
-
-</form>
-<a href='<%= index %>'>Volver a usuarios</a>
-
+</main>

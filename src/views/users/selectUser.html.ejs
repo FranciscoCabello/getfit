@@ -1,5 +1,11 @@
-<ul>
-    <% users.forEach((user) => { %>
-        <li><a href='<%= unsubscribePath(user.id) %>'><%= user.email %></a></li>
-    <% }) %>
-</ul>
+<main>
+    <ul>
+        <% users.forEach((user) => { %>
+            <li>
+                <a href='<%= unsubscribePath(user.id) %>'>
+                    <%= user.email %>
+                </a>
+            </li>
+            <% }) %>
+    </ul>
+</main>

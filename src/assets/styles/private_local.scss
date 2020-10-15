@@ -1,0 +1,36 @@
+.priv-local-info section {
+    padding: 20px;
+    border: 2px solid white;
+    border-radius: 10px;
+    height: 100%;
+    background-color: #C9BAEA;
+    width: 30%;
+}
+
+.priv-local-info h2 {
+    color: #131966;
+    font-size: 30px;
+}
+
+.priv-local-info div {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    //grid-gap: 10px;
+}
+
+.priv-local-info div article {
+    padding: 0px 150px;
+    border: 2px solid white;
+    border-radius: 10px;
+    height: 100%;
+    background-color: #C9BAEA;
+    width: 30%;
+}
+
+.priv-local-info article form {
+    width: 100%;
+}
+
+.priv-local-info form {
+    width: 50%;
+}

@@ -1,4 +1,147 @@
-html, body {
-  margin: 0;
-  padding: 0;
+html,
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #B6BAEA;
+}
+
+main {
+    width: 80%;
+    margin: 0 auto;
+    padding-bottom: 40px;
+}
+
+main h1 {
+    color: #131966;
+    font-size: 48px;
+}
+
+header {
+    width: 80%;
+    margin: 0 auto;
+    padding-bottom: 40px;
+    display: inline-block;
+    background-color: #383B6B;
+    border-radius: 10px;
+}
+
+.header ul li {
+    display: inline-block;
+    background-color: #C9BAEA;
+    color: white;
+    width: 20%;
+    padding: 20px 50px;
+    margin-right: -20px;
+    box-sizing: border-box;
+    text-align: center;
+    border: 2px solid white;
+    border-radius: 10px;
+    font-size: 30px;
+}
+
+header ul li :hover {
+    background-color: pink;
+}
+
+.main-container {
+    display: flex;
+}
+
+.main-container .main-article {
+    flex: 1;
+}
+
+.main-article section {
+    padding: 20px;
+    border: 2px solid white;
+    border-radius: 10px;
+    height: 100%;
+    background-color: #C9BAEA;
+}
+
+.locals-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+}
+
+.locals-container h2 {
+    color: #131966;
+}
+
+.locals-container section {
+    padding: 10px;
+    border: 2px solid white;
+    border-radius: 10px;
+    margin: 20px;
+    background-color: #C9BAEA;
+}
+
+.options-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+}
+
+.options-container section {
+    padding: 70px;
+    border: 2px solid white;
+    border-radius: 10px;
+    margin: 20px;
+    background-color: #C9BAEA;
+    font-size: 30px;
+    text-align: center;
+}
+
+.local-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+}
+
+.local-info section {
+    padding: 70px;
+    border: 2px solid white;
+    border-radius: 10px;
+    margin: 20px;
+    background-color: #C9BAEA;
+    font-size: 30px;
+    text-align: center;
+}
+
+.local-activities {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+}
+
+.local-activities article {
+    padding: 70px;
+    border: 2px solid white;
+    border-radius: 10px;
+    margin: 20px;
+    background-color: #C9BAEA;
+    font-size: 30px;
+    text-align: center;
+}
+
+.local-activities article p {
+    font-size: 15px;
+}
+
+.pre-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 30px;
+}
+
+footer {
+    width: 80%;
+    margin: 0 auto;
+    background-color: rgb(110, 107, 107);
+    padding: 0 10%;
+    display: flex;
+    justify-content: space-between;
 }

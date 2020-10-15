@@ -1,19 +1,21 @@
-<h1>
-    <%= request.tipo %>
-</h1>
-<p>
-    <%= request.comentario %>
-</p>
-<form method='GET' action="<%= editRequestPath(request) %>">
-    <div class='actions'>
-        <input type="hidden" name="_method" value="patch" />
-        <input class="profeditt" type="submit" value="Editar" />
-    </div>
-</form>
-<form method='POST' action="<%= deleteRequestPath(request) %>">
-    <div class='actions'>
-        <input type="hidden" name="_method" value="delete" />
-        <input class="profeditt" type="submit" value="Eliminar" />
-    </div>
-</form>
-<a href='<%= requestsPath %>'> Volver a página principal </a>
+<main>
+    <h1>
+        <%= request.tipo %>
+    </h1>
+    <p>
+        <%= request.comentario %>
+    </p>
+    <form method='GET' action="<%= editRequestPath(request) %>">
+        <div class='actions'>
+            <input type="hidden" name="_method" value="patch" />
+            <input class="profeditt" type="submit" value="Editar" />
+        </div>
+    </form>
+    <form method='POST' action="<%= deleteRequestPath(request) %>">
+        <div class='actions'>
+            <input type="hidden" name="_method" value="delete" />
+            <input class="profeditt" type="submit" value="Eliminar" />
+        </div>
+    </form>
+    <a href='<%= requestsPath %>'> Volver a página principal </a>
+</main>

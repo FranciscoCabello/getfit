@@ -1,15 +1,41 @@
-<a href='<%= newActivityPath %>'>Crear nueva actividad</a>
+<main>
+    <h1>Actividades</h1>
+    <div class="locals-container">
+        <% activities.forEach(activity => { %>
+            <section>
+                <h2>
+                    <%=activity.name%>
+                </h2>
+                <p><strong>Dificultad:</strong>
+                    <%=activity.dificulty%>
+                </p>
+                <p>
+                    <strong>Capacidad:</strong>
+                    <%=activity.capacity%>
+                </p>
+                <p>
+                    <strong>Horario:</strong>
+                    <%=activity.horarioI%> -
+                        <%=activity.horarioT%>
+                </p>
+                <P>
+                    <strong>Inscritos:</strong>
+                    <% if (subscribedAmount(activity.id)) { %>
+                        <%= subscribedAmount(activity.id) %>
+                            <% } else { %>
+                                0
+                                <% } %>
+                </P>
+                <p><strong>Local:</strong>
+                    <a href="<%= localPath(activity.localId) %>">
+                        <%=localsNames[activity.localId]%>
+                    </a>
+                </p>
 
-<ul>
-<% activities.forEach(activity => { %>
-    <li>
-        <div>
-            <h2><%=activity.name%></h2>
-            <p>Dificultad: <%=activity.dificulty%></p>
-            <p>Local: <%=localsNames[activity.localId]%></p>
-        </div>
-    </li>
-<% }) %>
-</ul>
-<br>
-<a href='<%= index %>'>Home</a>
+            </section>
+            <% }) %>
+    </div>
+    <div class="pre-footer">
+        <a href='<%= index %>'>Home</a>
+    </div>
+</main>

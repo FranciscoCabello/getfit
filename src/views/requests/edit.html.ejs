@@ -1,17 +1,19 @@
-<h1>Editar información de solicitud</h1>
+<main>
+    <h1>Editar información de solicitud</h1>
 
-<form method='POST' action="<%= updateRequestPath(request) %>">
-    <div class='field'>
-        <label for='tipo'>Tipo</label>
-        <input type='number' id="tipo" name='tipo' value="<%= request.tipo %>" />
-    </div>
-    <div class='field'>
-        <label for='comentario'>Comentario</label>
-        <input type="text" name="comentario" id='comentario' value="<%= request.comentario %>" />
-    </div>
-    <div class='actions'>
-        <input type="hidden" name="_method" value="patch" />
-        <input class="profeditt" type="submit" value="Guardar cambios" />
-    </div>
-</form>
-<a href='<%= requestsPath %>'> Volver a página principal </a>
+    <form method='POST' action="<%= updateRequestPath(request) %>">
+        <div class='field'>
+            <label for='tipo'>Tipo</label>
+            <input type='number' id="tipo" name='tipo' value="<%= request.tipo %>" />
+        </div>
+        <div class='field'>
+            <label for='comentario'>Comentario</label>
+            <input type="text" name="comentario" id='comentario' value="<%= request.comentario %>" />
+        </div>
+        <div class='actions'>
+            <input type="hidden" name="_method" value="patch" />
+            <input class="profeditt" type="submit" value="Guardar cambios" />
+        </div>
+    </form>
+    <a href='<%= requestsPath %>'> Volver a página principal </a>
+</main>

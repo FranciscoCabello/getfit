@@ -1,0 +1,48 @@
+.user-profile-big {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-profile-big div {
+    padding: 10px;
+}
+
+.user-profile-big div form {
+    display: inline-block;
+    width: 50%;
+}
+
+.user-profile {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 5px;
+    place-items: center;
+}
+
+.user-profile .datos {
+    padding: 10px 50px;
+    border: 2px solid white;
+    border-radius: 10px;
+    height: 80%;
+    background-color: #C9BAEA;
+}
+
+.user-data {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 5px;
+}
+
+.user-data section {
+    padding: 10px 5px;
+    border: 2px solid white;
+    border-radius: 10px;
+    height: 100%;
+    background-color: #C9BAEA;
+    margin: 10px;
+}
+
+.user-data section h2 {
+    color: #131966;
+    font-size: 30px;
+}

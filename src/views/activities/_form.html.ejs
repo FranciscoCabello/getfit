@@ -1,13 +1,26 @@
-<form method="post" action="<%= createActivityPath %>">
-    <div class="field">
-        <label for="name">Nombre: </label>
-        <input type="text" name="name"/>
-    </div>
-    <div class="field">
-        <label for="name">Dificultad: </label>
-        <input type="text" name="dificulty"/>
-    </div>
-    <div class="actions">
-        <input type="submit" value="Crear">
-    </div>
-</form>
+<main>
+    <form method="post" action="<%= createActivityPath %>">
+        <div class="field">
+            <label for="name">Nombre: </label>
+            <input type="text" name="name" />
+        </div>
+        <div class="field">
+            <label for="dificulty">Dificultad: </label>
+            <select name="dificulty">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+        </div>
+        <div class="actions">
+            <input type="submit" value="Crear">
+        </div>
+    </form>
+</main>

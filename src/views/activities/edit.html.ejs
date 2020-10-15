@@ -1,5 +1,5 @@
 <main>
-    <form method='post' action="<%= createActivitiesPath %>">
+    <form method='post' action="<%= editActivityPath %>">
         <% if (locals.errors){ %>
             <div class='errors'>
                 <p>La actividad no se pudo crear debido a los siguientes errores:</p>
@@ -16,7 +16,7 @@
                 <div class='field'>
                     <div class='field'>
                         <label for='name'>Nombre</label>
-                        <input type='text' id='name' name='name' />
+                        <input type='text' id='name' name='name' value="<%= activity.name %>" />
                     </div>
                     <div class='field'>
                         <label for="dificulty">Dificultad: </label>
@@ -35,19 +35,19 @@
                     </div>
                     <div class="field">
                         <label for='capacity'>Capacidad:</label>
-                        <input type='number' id='capacity' name='capacity' placeholder="Ejemplo: 15"/>
+                        <input type='number' id='capacity' name='capacity' value="<%= activity.capacity %>" placeholder="Ejemplo: 15"/>
                     </div>
                     <div class='field'>
                         <label for='horarioI'>Horario inicio:</label>
-                        <input type='time' id='horarioI' name='horarioI' placeholder="Ejemplo: 08:00"/>
+                        <input type='time' id='horarioI' name='horarioI' value="<%= activity.horarioI %>" placeholder="Ejemplo: 08:00"/>
                     </div>
                     <div class='field'>
                         <label for='horarioT'>Horario termino:</label>
-                        <input type='time' id='horarioT' name='horarioT' placeholder="Ejemplo: 12:00"/>
+                        <input type='time' id='horarioT' name='horarioT' value="<%= activity.horarioT %>" placeholder="Ejemplo: 12:00"/>
                     </div>
                 </div>
                 <div class='actions'>
-                    <input type='submit' value='Crear' />
+                    <input type='submit' value='Aceptar' />
                 </div>
     </form>
     <a href='<%= viewLocalOwner %>'>Volver al local</a>

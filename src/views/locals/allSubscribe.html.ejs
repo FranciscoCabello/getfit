@@ -1,0 +1,27 @@
+<main>
+    <h1>Locales</h1>
+    <div class="locals-container">
+        <table>
+            <tr>
+                <th>Nombre</th>
+                <th>Ubicacion</th>
+                <th></th>
+                <th></th>
+            </tr>
+            <% locals.forEach(local => {%>
+                <tr>
+                    <td>
+                        <%= local.name %>
+                    </td>
+                    <td>
+                        <%= local.ubicacion %>
+                    </td>
+                    <td><a href='<%= localPath(local.id) %>'>Ver más</a></td>
+                    <td>
+                        <form method='post' action=""><input type='submit' value='Cancelar suscripcion' /></form>
+                    </td>
+                </tr>
+                <% }) %>
+        </table>
+    </div>
+</main>

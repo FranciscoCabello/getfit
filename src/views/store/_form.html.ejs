@@ -1,0 +1,59 @@
+<main>
+    <form method='post' action="<%= createRequestPath %>">
+        <% if (locals.errors){ %>
+            <div class='errors'>
+                <p>El local no se pudo crear debido a los siguientes errores:</p>
+                <ul>
+                    <% errors.forEach(error =>  { %>
+                        <li>
+                            <%= error.path%>:
+                                <%= error.message %>
+                        </li>
+                        <% }) %>
+                </ul>
+            </div>
+            <% } %>
+                <div class='field'>
+                    <label for='name'>Nombre:</label>
+                    <input type="text" name="name" id='name' placeholder="Ejemplo: Barra olimpica" />
+                </div>
+                <div class='field'>
+                    <label for='precio'>Precio:</label>
+                    <input type="number" name="precio" id='precio' placeholder="Ejemplo: 10000" />
+                </div>
+                <div class='field'>
+                    <label for='tipo'>Tipo:</label>
+                    <select name="tipo">
+                    <option value="Accesorios">Accesorios</option>
+                    <option value="Vestuario">Vestuario</option>
+                    <option value="Pesas">Pesas</option>
+                    <option value="Natacion">Natacion</option>
+                    <option value="Montana">Montana</option>
+                    <option value="Nutricion">Nutricion</option>
+                    <option value="Otros">Otros</option>
+                </select>
+                </div>
+                <div class='field'>
+                    <label for='estado'>Estado:</label>
+                    <select name="estado">
+                    <option value="Nuevo">Nuevo</option>
+                    <option value="Semi-nuevo">Semi-nuevo</option>
+                    <option value="Usado">Usado</option>
+                </select>
+                </div>
+                <div class='field'>
+                    <label for='foto'>Foto:</label>
+                    <input type="text" name="foto" id='foto' placeholder="Ejemplo: URL" />
+                </div>
+                <div class='field'>
+                    <div class='field'>
+                        <label for='descripcion'>Descripcion:</label>
+                        <textarea name="descripcion" id='descripcion' cols="30" rows="4" placeholder="Ejemplo: Producto de pana"></textarea>
+                    </div>
+                </div>
+                <div class='actions'>
+                    <input type='submit' value='Crear' />
+                </div>
+                <a href='<%= storePath %>'> Volver a la tienda</a>
+    </form>
+</main>

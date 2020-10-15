@@ -1,0 +1,87 @@
+<main>
+
+    <h1>
+        <%= local.name %>
+    </h1>
+    <div class="local-info">
+        <section>
+            <img src='<%= local.photo %>' width="800" height="400" />
+        </section>
+        <section>
+            <p>
+                <strong>Dirección:</strong>
+                <%= local.ubicacion %>
+            </p>
+            <p>
+                <strong>Apertura:</strong>
+                <%= local.horarioA %>
+            </p>
+            <p>
+                <strong>Cierre:</strong>
+                <%= local.horarioC %>
+            </p>
+            <p>
+                <strong>Precio:</strong>
+                <%= local.precio %>
+            </p>
+            <p>
+                <strong>Capacidad:</strong>
+                <%= local.capacidad %>
+            </p>
+            <% if (locals.currentUser) { %>
+                <p>
+                    <form method="post" action="<%= subcribeLocal %>">
+                        <input type='submit' value='Suscribirse' />
+                    </form>
+                    <form method="get" action="<%= createRequestPath %>">
+                        <input type='submit' value='Dejar un comentario' />
+                    </form>
+                </p>
+                <% } %>
+
+        </section>
+
+    </div>
+    <h2>Actividades</h2>
+    <div class="local-activities">
+        <% activitiesList.forEach((activity) => { %>
+            <article>
+                <p><strong>Nombre:</strong>
+                    <%= activity.name %>
+                </p>
+                <p><strong>Dificultad:</strong>
+                    <%= activity.dificulty %>
+                </p>
+                <p><strong>Capacidad</strong>
+                    <%= activity.capacity %>
+                </p>
+                <p><strong>Horario</strong>
+                    <%= activity.horarioI %> -
+                        <%= activity.horarioT %>
+                </p>
+                <P>
+                    <strong>Inscritos:</strong>
+                    <% if (subscribedAmount(activity.id)) { %>
+                        <%= subscribedAmount(activity.id) %>
+                            <% } else { %>
+                                0
+                                <% } %>
+                </P>
+            </article>
+            <% }); %>
+    </div>
+    <h2>Comentarios</h2>
+    <div class="local-activities">
+        <% comms.forEach((coments) => { %>
+            <article>
+                <h3>
+                    <%= coments.tipo %>
+                </h3>
+                <p>
+                    <%= coments.comentario %>
+                </p>
+            </article>
+            <% }); %>
+    </div>
+    <a href='<%= localsPath %>'> Volver a página principal </a>
+</main>

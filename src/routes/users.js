@@ -1,5 +1,5 @@
 const KoaRouter = require('koa-router');
-const { func } = require('prop-types');
+const bcrypt = require('bcrypt');
 
 const router = new KoaRouter();
 
@@ -13,7 +13,7 @@ const USER_FIELDS = [
 ];
 
 async function getUser(ctx, next) {
-  ctx.state.user = await ctx.orm.users.findByPk(ctx.params.id);
+  ctx.state.user = await ctx.orm.users.findByPk(ctx.session.currentUser.id);
   return next();
 }
 
@@ -31,8 +31,8 @@ async function localsNames(ctx, next) {
   return next();
 }
 
-async function getActsUser(ctx, next) {
-  ctx.state.actUser = await ctx.orm.users.findByPk(ctx.params.id, {
+async function actsUser(ctx, next) {
+  ctx.state.actUser = await ctx.orm.users.findByPk(ctx.session.currentUser.id, {
     include: {
       association: ctx.orm.users.activities,
       as: 'activities',
@@ -41,23 +41,23 @@ async function getActsUser(ctx, next) {
   return next();
 }
 
-async function getLocalsUser(ctx, next) {
+async function subscription(ctx, next) {
   const openLocalId = [];
-  ctx.state.suscription = [];
+  ctx.state.subscription = [];
   const relation = await ctx.orm.userlocal.findAll();
   relation.forEach((rel) => {
-    if (rel.userid === ctx.state.user.id) { openLocalId.push(rel); }
+    if (rel.userid === ctx.session.currentUser.id) { openLocalId.push(rel); }
   });
-  for (let index=0; index<openLocalId.length; index++) {
+  for (let index = 0; index < openLocalId.length; index++) {
     // eslint-disable-next-line no-await-in-loop
     let addSuscript = await ctx.orm.locals.findByPk(openLocalId[index].localid);
-    ctx.state.suscription.push(addSuscript);
+    ctx.state.subscription.push(addSuscript);
   }
   return next();
 }
 
-async function getOwnerLocals(ctx, next) {
-  ctx.state.user = await ctx.orm.users.findByPk(ctx.params.id, {
+async function owner(ctx, next) {
+  ctx.state.user = await ctx.orm.users.findByPk(ctx.session.currentUser.id, {
     include: {
       association: ctx.orm.users.ownerLocals,
       as: 'locals',
@@ -119,7 +119,13 @@ async function destroyRelations(ctx, next) {
   return next();
 }
 
+async function loadProduct(ctx, next) {
+  ctx.state.products = await ctx.orm.products.findAll({ where: { userId: ctx.session.currentUser.id } });
+  return next();
+}
+
 router.get('users', '/', async (ctx) => {
+  console.log(ctx.session.currentUser);
   await ctx.render('users/index', {
     logIn: ctx.router.url('users-login'),
     signUp: ctx.router.url('users-signup'),
@@ -128,41 +134,6 @@ router.get('users', '/', async (ctx) => {
     unsubscribeAct: ctx.router.url('unsubscribe-activities'),
     index: ctx.router.url('index'),
   });
-});
-
-router.get('select-local', '/local', async (ctx) => {
-  const users = await ctx.orm.users.findAll();
-  const locals = await ctx.orm.locals.findAll();
-  await ctx.render('users/selectLocal', {
-    users,
-    locals,
-    relationPath: ctx.router.url('subscribe-local'),
-  });
-});
-
-router.post('subscribe-local', '/subscribe_local', async (ctx) => {
-  // const user = await ctx.orm.users.findByPk(ctx.request.body.userid);
-  // const local = await ctx.orm.locals.findByPk(ctx.request.body.localid);
-  try {
-    const userLocal = await ctx.orm.userlocal.build(ctx.request.body);
-    await userLocal.save();
-    await ctx.render('users/index', {
-      logIn: ctx.router.url('users-login'),
-      signUp: ctx.router.url('users-signup'),
-      activities: ctx.router.url('select-activities'),
-      subscribe: ctx.router.url('select-local'),
-      unsubscribeAct: ctx.router.url('unsubscribe-activities'),
-      index: ctx.router.url('index'),
-    });
-  } catch (error) {
-    const users = await ctx.orm.users.findAll();
-    const locals = await ctx.orm.locals.findAll();
-    await ctx.render('users/selectLocal', {
-      users,
-      locals,
-      relationPath: ctx.router.url('subscribe-local'),
-    });
-  }
 });
 
 router.get('select-activities', '/activities', localsNames, getUsers, async (ctx) => {
@@ -204,7 +175,7 @@ router.get('unsubscribe-activities', '/unsubscribe_activities', async (ctx) => {
   });
 });
 
-router.get('unsubscribe-activites-id', '/:id/unsubscribe', getUser, getActsUser, async (ctx) => {
+router.get('unsubscribe-activites-id', '/:id/unsubscribe', getUser, async (ctx) => {
   await ctx.render('users/unsubscribeActivity', {
     activities: ctx.state.actUser.activities,
     unsubscribePath: ctx.router.url('unsubsribe-activities-id-bd', ctx.state.actUser.id),
@@ -242,23 +213,57 @@ router.post('users-signup-post', '/createUser', async (ctx) => {
   }
 });
 
-router.get('users-login', '/login', getUsers, async (ctx) => {
+router.get('users-login', '/login', async (ctx) => {
   await ctx.render('users/login', {
-    users: ctx.state.users,
-    usersPath: (id) => ctx.router.url('user-profile', id),
+    error: null,
+    loginPath: ctx.router.url('user-login-post'),
   });
 });
 
-router.get('user-profile', '/:id/userProfile', getActsUser, getOwnerLocals, getLocalsUser, async (ctx) => {
-  const { actUser } = ctx.state;
-  const { user } = ctx.state;
+router.post('user-login-post', '/loginPost', async (ctx) => {
+  const { email, password } = ctx.request.body;
+  const user = await ctx.orm.users.findOne({ where: { email } });
+  if (user) {
+    const authenticated = await bcrypt.compare(password, user.password);
+    if (!authenticated) {
+      await ctx.render('users/login', {
+        error: 'Usuario o contrasena incorrecta',
+        loginPath: ctx.router.url('user-login-post'),
+      });
+    } else {
+      ctx.session.currentUser = {
+        id: user.id,
+        name: user.name,
+      };
+      ctx.redirect(ctx.router.url('index'));
+    }
+  } else {
+    await ctx.render('users/login', {
+      error: 'Usuario o contrasena incorrecta',
+      loginPath: ctx.router.url('user-login-post'),
+    });
+  }
+});
+
+router.get('users-logout', 'logOut', async (ctx) => {
+  ctx.session.currentUser = null;
+  ctx.redirect(ctx.router.url('index'));
+});
+
+router.get('userProfile', '/profile', owner, loadProduct, async (ctx) => {
+  const { user, products } = ctx.state;
+  const ownedLocals = user.locals;
   await ctx.render('users/profile', {
-    user: actUser,
-    ownLocals: user.locals,
-    suscription: ctx.state.suscription,
-    pathForm: ctx.router.url('user-update', actUser.id),
-    del: ctx.router.url('user-delete', ctx.params.id),
-    index: ctx.router.url('users'),
+    user,
+    pathForm: ctx.router.url('user-update', ctx.session.currentUser.id),
+    del: ctx.router.url('user-delete', ctx.session.currentUser.id),
+    index: ctx.router.url('index'),
+    ownedLocals,
+    viewLocalOwnerPath: (id) => ctx.router.url('viewLocalOwner', id),
+    subscriptionLocalPath: ctx.router.url('subscriptionLocals', ctx.session.currentUser.id),
+    subscriptionActivitiesPath: ctx.router.url('subscribedActivities', ctx.session.currentUser.id),
+    products,
+    destroyProductPath: (id) => ctx.router.url('deleteProduct', id),
   });
 });
 
@@ -277,7 +282,7 @@ router.post('user-update-post', '/:id/update/post', getUser, async (ctx) => {
   ctx.redirect(ctx.router.url('user-profile', user.id));
 });
 
-router.post('user-delete', '/:id/deleteUser', getOwnerLocals, destroyRelations, async (ctx) => {
+router.post('user-delete', '/:id/deleteUser', destroyRelations, async (ctx) => {
   const { user } = ctx.state;
   await user.destroy();
   ctx.redirect(ctx.router.url('users'));

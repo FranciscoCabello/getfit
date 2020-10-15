@@ -1,17 +1,41 @@
 <!DOCTYPE html>
 <html>
 
-  <head>
+<head>
     <meta charset="utf-8">
     <title>GETFITapp</title>
     <% if (env !== 'development') { %>
-      <link rel="stylesheet" href="<%= assetPath('app.css') %>">
-    <% } %>
-  </head>
+        <link rel="stylesheet" href="<%= assetPath('app.css') %>">
+        <% } %>
+</head>
 
-  <body>
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="<%= locals.index %>">
+                <img src="https://news.fitnyc.edu/wp-content/uploads/2017/11/cropped-site-logo.png" alt="" width="70" height="70">
+            </a>
+        </div>
+        <ul>
+            <% if (locals.currentUser) { %>
+                <li><a href="<%= locals.profileUserPath %>">Perfil</a></li>
+                <li><a href="<%= locals.allLocalsPath %>">Locales</a></li>
+                <li><a href="<%= locals.activitiesPath %>">Actividades</a></li>
+                <li><a href="<%= storePath %>">Tienda</a></li>
+                <li><a href="<%= locals.logOut %>">Log out</a></li>
+                <% } else { %>
+                    <li><a href="<%= locals.allLocalsPath %>">Locales</a></li>
+                    <li><a href="<%= locals.signIn %>">Sign in</a></li>
+                    <li><a href="<%= locals.signUp %>">Sign up</a></li>
+                    <% } %>
+        </ul>
+    </header>
     <%- body %>
-    <script src="<%= assetPath('app.js') %>"></script>
-  </body>
+        <script src="<%= assetPath('app.js') %>"></script>
+        <footer>
+            <p><strong>Grupo GetFit</strong></p>
+            <p><strong>IIC2513 - Tecnologías y Aplicaciones Web - 2020/2</strong></p>
+        </footer>
+</body>
 
 </html>

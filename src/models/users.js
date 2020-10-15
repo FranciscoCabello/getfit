@@ -1,3 +1,14 @@
+const bcrypt = require('bcrypt');
+
+const PASSWORD_SALT = 10;
+
+async function buildPasswordHash(instance) {
+  if (instance.changed('password')) {
+    const hash = await bcrypt.hash(instance.password, PASSWORD_SALT);
+    instance.set('password', hash);
+  }
+}
+
 module.exports = (sequelize, DataTypes) => {
   const users = sequelize.define('users', {
     name: {
@@ -22,11 +33,13 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: true,
         notEmpty: true,
+        isLowercase: true,
       },
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
       validate: {
         isEmail: true,
         notNull: true,
@@ -52,11 +65,15 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {});
 
+  users.beforeCreate(buildPasswordHash);
+  users.beforeUpdate(buildPasswordHash);
+
   users.associate = (models) => {
     // associations can be defined here. This method receives a models parameter.
     users.userLocals = users.belongsToMany(models.locals, { through: 'userlocals', foreignKey: 'userid', onDelete: 'CASCADE' });
     users.ownerLocals = users.belongsToMany(models.locals, { through: 'ownerlocals', foreignKey: 'ownerid', onDelete: 'CASCADE' });
     users.activities = users.belongsToMany(models.activities, { through: 'userAct', foreignKey: 'userid', onDelete: 'CASCADE' });
+    users.products = users.hasMany(models.products, { onDelete: 'CASCADE' });
   };
 
   return users;

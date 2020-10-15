@@ -5,7 +5,7 @@ const koaLogger = require('koa-logger');
 const koaFlashMessage = require('koa-flash-message').default;
 const koaStatic = require('koa-static');
 const render = require('koa-ejs');
-const session = require('koa-session');
+const encryptedSession = require('koa-encrypted-session');
 const override = require('koa-override-method');
 const assets = require('./assets');
 const mailer = require('./mailers');
@@ -55,8 +55,10 @@ if (developmentMode) {
 app.use(koaStatic(path.join(__dirname, '..', 'build'), {}));
 
 // expose a session hash to store information across requests from same client
-app.use(session({
+app.use(encryptedSession({
+  key: 'sessionEncrypted',
   maxAge: 14 * 24 * 60 * 60 * 1000, // 2 weeks
+  secretKey: Buffer.from('EsAg64LMvGITBBz1ZGLfDNU/MYqGDpTzJ1u4BsvIfTw=', 'base64'),
 }, app));
 
 // flash messages support

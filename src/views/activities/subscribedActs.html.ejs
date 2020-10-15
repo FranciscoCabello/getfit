@@ -5,7 +5,7 @@
             <th>Dificultad</th>
             <th></th>
         </tr>
-        <% activitiesList.forEach((activity) => { %>
+        <% userActivities.activities.forEach((activity) => { %>
             <tr>
                 <td>
                     <%= activity.name %>
@@ -14,11 +14,14 @@
                     <%= activity.dificulty %>
                 </td>
                 <td>
-                    <form method="post" action="<%= subscribeActivitiePath(activity.id) %>"><input type='submit' value='Inscribirse' /></form>
+                    <form method="post" action="<%= deleteSubsActPath(activity.id) %>"><input type="submit" value='Cancelar suscripcion' /></form>
                 </td>
             </tr>
             <% }); %>
     </table>
+    <form method="get" action="<%= profileUserPath %>">
+        <input type='submit' value="Ir a mi perfil" />
+    </form>
     <form method="get" action="<%= subscriptionLocalsPath %>">
         <input type='submit' value="Volver a locales suscritos" />
     </form>

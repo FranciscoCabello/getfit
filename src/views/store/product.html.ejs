@@ -1,0 +1,36 @@
+<main>
+    <div class="store-products">
+        <article>
+            <p><strong>Producto:</strong>
+                <%= product.name %>
+            </p>
+            <p><strong>Precio:</strong>
+                <%= product.precio %>
+            </p>
+            <p><strong>Tipo:</strong>
+                <%= product.tipo %>
+            </p>
+            <p><strong>Estado:</strong>
+                <%= product.estado %>
+            </p>
+            <p><strong>Descripcion:</strong>
+                <%= product.descripcion %>
+            </p>
+            <p>
+                <img src="<%= product.foto %>" width="200" height="210" />
+            </p>
+        </article>
+        <article>
+            <p><strong>Contacto:</strong>
+                <%= userInfo.name %> <%= userInfo.lastname %>
+            </p>
+            <p><strong>Telefono:</strong>
+                <%= userInfo.phone %>
+            </p>
+            <p><strong>Email:</strong>
+                <%= userInfo.email %>
+            </p>
+        </article>
+    </div>
+    <a href='<%= storePath %>'> Volver a la tienda</a>
+</main>

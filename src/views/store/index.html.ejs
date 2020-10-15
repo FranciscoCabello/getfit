@@ -1,0 +1,31 @@
+<main>
+    <h1>Productos</h1>
+    <% allProducts.forEach((product) => { %>
+        <div class="store-products">
+            
+            <article>
+                <section>
+                    <p><strong>Producto:</strong>
+                        <%= product.name %>
+                    </p>
+                    <p><strong>Precio:</strong>
+                        <%= product.precio %>
+                    </p>
+                    <p><strong>Tipo:</strong>
+                        <%= product.tipo %>
+                    </p>
+                    <p><strong>Estado:</strong>
+                        <%= product.estado %>
+                    </p>
+                    <a href='<%= productPath(product.id) %>'>Ver producto</a>
+                </section>
+                <section>
+                    <img src="<%= product.foto %>" width="150px" height="150px" />
+                </section>
+            </article>
+            <% }) %>
+        </div>
+        <div class="pre-footer">
+            <a href="<%= createProductPath %>">Ofrecer un producto</a>
+        </div>
+</main>

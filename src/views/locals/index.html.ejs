@@ -1,20 +1,23 @@
-<a href='<%= newLocalPath %>'>Crear nuevo local</a>
-
-<p>
-    <%= quantity %>
-</p>
-
-<% locals.forEach(local => {%>
-    <div>
-        <h2>
-            <%= local.name %>
-        </h2>
-        <p>
-            <%= local.ubicacion %>
-        </p>
-        <a href='<%= localPath(local.id) %>'>Ver más</a>
+<main>
+    <h1>Locales</h1>
+    <div class="locals-container">
+        <% localsApp.forEach(local => {%>
+            <section>
+                <h2>
+                    <%= local.name %>
+                </h2>
+                <p>
+                    <%= local.ubicacion %>
+                </p>
+                <a href='<%= localPath(local.id) %>'>Ver más</a>
+            </section>
+            <% }) %>
     </div>
-    <% }) %>
-
-<br>
-<a href='<%= index %>'>Home</a>
+    <div class="pre-footer">
+        <a href='<%= index %>'>Home</a>
+        <% if (locals.currentUser) { %>
+        <a href='<%= viewLocals %>'>Ver suscripciones</a>
+        <a href='<%= newLocalPath %>'>Crear nuevo local</a>
+        <% } %>
+    </div>
+</main>

@@ -1,47 +1,51 @@
-<form method='post' action="<%= createLocalPath %>">
-    <% if (locals.errors){ %>
-        <div class='errors'>
-            <p>El local no se pudo crear debido a los siguientes errores:</p>
-            <ul>
-                <% errors.forEach(error =>  { %>
-                    <li>
-                        <%= error.path%>:
-                            <%= error.message %>
-                    </li>
-                    <% }) %>
-            </ul>
-        </div>
-        <% } %>
-            <div class='field'>
-                <label for='name'>Nombre</label>
-                <input type='text' id='name' name='name' value="<%= local.name %>" />
+<main>
+    <form method='post' action="<%= createLocalPath %>">
+        <% if (locals.errors){ %>
+            <div class='errors'>
+                <p>El local no se pudo crear debido a los siguientes errores:</p>
+                <ul>
+                    <% errors.forEach(error =>  { %>
+                        <li>
+                            <%= error.path%>:
+                                <%= error.message %>
+                        </li>
+                        <% }) %>
+                </ul>
             </div>
-            <div class='field'>
-                <label for='ubicacion'>Ubicación</label>
-                <input type="text" name="ubicacion" id='ubicacion' value="<%= local.ubicacion %>" />
-            </div>
-            <div class='field'>
-                <label for='photo'>Foto</label>
-                <input type='text' id="photo" name='photo' value="<%= local.photo %>" />
-            </div>
-            <div class='field'>
-                <label for='horarioA'>Horario apertura</label>
-                <input type='text' id="horarioA" name='horarioA' value="<%= local.horarioA %> " />
-            </div>
-            <div class='field'>
-                <label for='horarioC'>Horario cierre</label>
-                <input type='text' id="horarioC" name='horarioC' value="<%= local.horarioC %>" />
-            </div>
-            <div class='field'>
-                <label for='precio'>Precio</label>
-                <input type='number' id="precio" name='precio' value="<%= local.precio %>" />
-            </div>
-            <div class='field'>
-                <label for='capacidad'>Capacidad</label>
-                <input type='number' id="capacidad" name='capacidad' value="<%= local.capacidad %>" />
-            </div>
-            <div class='actions'>
-                <input type='submit' value='Crear' />
-            </div>
-</form>
-<a href='<%= localsPath %>'> Volver a página principal </a>
+            <% } %>
+                <div class='field'>
+                    <label for='name'>Nombre</label>
+                    <input type='text' id='name' name='name' value="<%= local.name %>" />
+                </div>
+                <div class='field'>
+                    <label for='ubicacion'>Ubicación</label>
+                    <input type="text" name="ubicacion" id='ubicacion' value="<%= local.ubicacion %>" />
+                </div>
+                <div class='field'>
+                    <label for='photo'>Foto</label>
+                    <input type='text' id="photo" name='photo' value="<%= local.photo %>" />
+                </div>
+                <div class='field'>
+                    <label for='horarioA'>Horario apertura</label>
+                    <input type='text' id="horarioA" name='horarioA' value="<%= local.horarioA %> " />
+                </div>
+                <div class='field'>
+                    <label for='horarioC'>Horario cierre</label>
+                    <input type='text' id="horarioC" name='horarioC' value="<%= local.horarioC %>" />
+                </div>
+                <div class='field'>
+                    <label for='precio'>Precio</label>
+                    <input type='number' id="precio" name='precio' value="<%= local.precio %>" />
+                </div>
+                <div class='field'>
+                    <label for='capacidad'>Capacidad</label>
+                    <input type='number' id="capacidad" name='capacidad' value="<%= local.capacidad %>" />
+                </div>
+                <div class='actions'>
+                    <input type='submit' value='Crear' />
+                </div>
+    </form>
+    <div class="pre-footer">
+        <a href='<%= localsPath %>'> Volver a página principal </a>
+    </div>
+</main>

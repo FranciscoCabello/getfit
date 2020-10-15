@@ -1,12 +1,14 @@
-<form method='post' action='<%= unsubscribePath %>'>
-    <div class='field'>
-        <select type='number' name='actid'>
+<main>
+    <form method='post' action='<%= unsubscribePath %>'>
+        <div class='field'>
+            <select type='number' name='actid'>
         <% activities.forEach((act) => { %>
           <option value='<%= act.id %>'><%= act.name %></option>
         <% }); %>
         </select>
-      </div>
-    <div class='actions'>
-      <input type='submit' value='Sign up'/>
-    </div>
-</form>
+        </div>
+        <div class='actions'>
+            <input type='submit' value='Sign up' />
+        </div>
+    </form>
+</main>

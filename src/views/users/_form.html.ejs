@@ -1,37 +1,41 @@
+<main>
+    <form method='post' action='<%= pathForm %>'>
+        <% if (locals.errors){ %>
+            <div class='errors'>
+                <p>Error:</p>
+                <ul>
+                    <% errors.forEach(error =>  { %>
+                        <li>
+                            <%= error.path%>:
+                                <%= error.message %>
+                        </li>
+                        <% }) %>
+                </ul>
+            </div>
+            <% } %>
 
-<form method='post' action='<%= pathForm %>'>
-    <% if (locals.errors){ %>
-        <div class='errors'>
-            <p>Error:</p>
-            <ul>
-            <% errors.forEach(error =>  { %>
-                <li><%= error.path%>: <%= error.message %> </li>
-            <% }) %>
-            </ul>
-        </div>
-    <% } %>
 
-
-    <div class='field'>
-        Nombre: <input type='text' name='name' value='<%= user.name %>'/>
-    </div>
-    <div class='field'>
-        Apellido: <input type='text' name='lastname' value='<%= user.lastname %>'/>
-    </div>
-    <div class='field'>
-        Contraseña: <input type='text' name='password' value='<%= user.password %>'/>
-    </div>
-    <div class='field'>
-        Número: <input type='text' name='phone' value='<%= user.phone %>'/>
-    </div>
-    <div class='field'>
-        Fotografía: <input type='text' name='photo' value='<%= user.photo %>'/>
-    </div>
-    <div class='field'>
-        Email: <input type='text' name='email' value='<%= user.email %>'/>
-    </div>
-    <br>
-    <div class='actions'>
-        <input type='submit' value='Sign up'/>
-    </div>
-</form>
+                <div class='field'>
+                    Nombre: <input type='text' name='name' value='<%= user.name %>' placeholder="Ejemplo: Pedro"/>
+                </div>
+                <div class='field'>
+                    Apellido: <input type='text' name='lastname' value='<%= user.lastname %>' placeholder="Ejemplo: Carcuro"/>
+                </div>
+                <div class='field'>
+                    Contraseña: <input type='password' name='password' value='<%= user.password %>' placeholder="************"/>
+                </div>
+                <div class='field'>
+                    Número: <input type='text' name='phone' value='<%= user.phone %>' placeholder="Ejemplo: +56966261252 (12 digitos)"/>
+                </div>
+                <div class='field'>
+                    Fotografía: <input type='text' name='photo' value='<%= user.photo %>' placeholder="Ejemplo: URL"/>
+                </div>
+                <div class='field'>
+                    Email: <input type='text' name='email' value='<%= user.email %>' placeholder="Ejemplo: pedro@carcuro.com"/>
+                </div>
+                <br>
+                <div class='actions'>
+                    <input type='submit' value='Sign up' />
+                </div>
+    </form>
+</main>
