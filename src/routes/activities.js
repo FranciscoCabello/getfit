@@ -8,10 +8,12 @@ async function loadLocal(ctx, next) {
 }
 
 async function localsNames(ctx, next) {
-  const locals = await ctx.orm.locals.findAll();
-  locals.forEach((local) => {
-    ctx.state[local.id] = local.name;
-  });
+  if (ctx.session.currentUser) {
+    const locals = await ctx.orm.locals.findAll();
+    locals.forEach((local) => {
+      ctx.state[local.id] = local.name;
+    });
+  }
   return next();
 }
 
@@ -22,17 +24,21 @@ async function loadActivity(ctx, next) {
 
 async function activities(ctx, next) {
   const searchId = ctx.params.idLocal;
-  ctx.state.activitiesList = await ctx.orm.activities.findAll({ where: { localId: searchId } });
+  if (searchId) {
+    ctx.state.activitiesList = await ctx.orm.activities.findAll({ where: { localId: searchId } });
+  }
   return next();
 }
 
 async function userActs(ctx, next) {
-  ctx.state.userActivities = await ctx.orm.users.findByPk(ctx.session.currentUser.id, {
-    include: {
-      association: ctx.orm.users.activities,
-      as: 'activities',
-    },
-  });
+  if (ctx.session.currentUser) {
+    ctx.state.userActivities = await ctx.orm.users.findByPk(ctx.session.currentUser.id, {
+      include: {
+        association: ctx.orm.users.activities,
+        as: 'activities',
+      },
+    });
+  }
   return next();
 }
 
@@ -45,15 +51,17 @@ async function userActAssociation(ctx, next) {
 }
 
 async function subscribeActs(ctx, next) {
-  ctx.state.hashSubscription = {};
-  const relationAct = await ctx.orm.userAct.findAll();
-  relationAct.forEach((relation) => {
-    if (ctx.state.hashSubscription[relation.actid]) {
-      ctx.state.hashSubscription[relation.actid] += 1;
-    } else {
-      ctx.state.hashSubscription[relation.actid] = 1;
-    }
-  });
+  if (ctx.session.currentUser) {
+    ctx.state.hashSubscription = {};
+    const relationAct = await ctx.orm.userAct.findAll();
+    relationAct.forEach((relation) => {
+      if (ctx.state.hashSubscription[relation.actid]) {
+        ctx.state.hashSubscription[relation.actid] += 1;
+      } else {
+        ctx.state.hashSubscription[relation.actid] = 1;
+      }
+    });
+  }
   return next();
 }
 
@@ -67,23 +75,31 @@ async function checkSubcription(ctx, next) {
 }
 
 router.get('activities', '/', localsNames, subscribeActs, async (ctx) => {
-  const activities = await ctx.orm.activities.findAll();
-  await ctx.render('activities/index', {
-    activities,
-    localsNames: ctx.state,
-    subscribedAmount: (id) => ctx.state.hashSubscription[id],
-    newActivityPath: ctx.router.url('select-local-activities'),
-    localPath: (id) => ctx.router.url('viewLocalPublic', id),
-    index: ctx.router.url('index'),
-  });
+  if (ctx.session.currentUser) {
+    const activities = await ctx.orm.activities.findAll();
+    await ctx.render('activities/index', {
+      activities,
+      localsNames: ctx.state,
+      subscribedAmount: (id) => ctx.state.hashSubscription[id],
+      newActivityPath: ctx.router.url('select-local-activities'),
+      localPath: (id) => ctx.router.url('viewLocalPublic', id),
+      index: ctx.router.url('index'),
+    });
+  } else {
+    ctx.redirect(ctx.router.url('index'));
+  }
 });
 
 router.get('createActivity', '/:id/create', loadLocal, async (ctx) => {
-  const { local } = ctx.state;
-  await ctx.render('activities/new', {
-    createActivitiesPath: ctx.router.url('creatingActivity', local.id),
-    viewLocalOwner: ctx.router.url('viewLocalOwner', local.id),
-  });
+  if (ctx.session.currentUser) {
+    const { local } = ctx.state;
+    await ctx.render('activities/new', {
+      createActivitiesPath: ctx.router.url('creatingActivity', local.id),
+      viewLocalOwner: ctx.router.url('viewLocalOwner', local.id),
+    });
+  } else {
+    ctx.redirect(ctx.router.url('index'));
+  }
 });
 
 router.post('creatingActivity', '/:id/creating', loadLocal, async (ctx) => {
@@ -110,12 +126,16 @@ router.post('creatingActivity', '/:id/creating', loadLocal, async (ctx) => {
 });
 
 router.get('editActivity', '/:idLocal/:idAct/update', loadActivity, async (ctx) => {
-  const { activity } = ctx.state;
-  await ctx.render('activities/edit', {
-    activity,
-    editActivityPath: ctx.router.url('editingActivity', ctx.params.idLocal, ctx.params.idAct),
-    viewLocalOwner: ctx.router.url('viewLocalOwner', ctx.params.idLocal),
-  });
+  if (ctx.session.currentUser) {
+    const { activity } = ctx.state;
+    await ctx.render('activities/edit', {
+      activity,
+      editActivityPath: ctx.router.url('editingActivity', ctx.params.idLocal, ctx.params.idAct),
+      viewLocalOwner: ctx.router.url('viewLocalOwner', ctx.params.idLocal),
+    });
+  } else {
+    ctx.redirect(ctx.router.url('index'));
+  }
 });
 
 router.post('editingActivity', '/:idLocal/:idAct/updating', loadActivity, async (ctx) => {
@@ -157,13 +177,17 @@ router.post('subscribeActivity', '/:idAct/subscribe', checkSubcription, async (c
 });
 
 router.get('subscribedActivities', '/subscribed', userActs, async (ctx) => {
-  const { userActivities } = ctx.state;
-  await ctx.render('activities/subscribedActs', {
-    userActivities,
-    deleteSubsActPath: (id) => ctx.router.url('deleteSubscriptionAct', id),
-    profileUserPath: ctx.router.url('userProfile'),
-    subscriptionLocalsPath: ctx.router.url('subscriptionLocals'),
-  });
+  if (ctx.session.currentUser) {
+    const { userActivities } = ctx.state;
+    await ctx.render('activities/subscribedActs', {
+      userActivities,
+      deleteSubsActPath: (id) => ctx.router.url('deleteSubscriptionAct', id),
+      profileUserPath: ctx.router.url('userProfile'),
+      subscriptionLocalsPath: ctx.router.url('subscriptionLocals'),
+    });
+  } else {
+    ctx.redirect(ctx.router.url('index'));
+  }
 });
 
 router.post('deleteSubscriptionAct', '/:idAct/delete/subs', userActAssociation, async (ctx) => {
@@ -171,12 +195,16 @@ router.post('deleteSubscriptionAct', '/:idAct/delete/subs', userActAssociation, 
 });
 
 router.get('activitiesLocal', '/:idLocal/activities/local', activities, async (ctx) => {
-  const { activitiesList } = ctx.state;
-  await ctx.render('activities/local', {
-    activitiesList,
-    subscribeActivitiePath: (id) => ctx.router.url('subscribeActivity', id),
-    subscriptionLocalsPath: ctx.router.url('subscriptionLocals'),
-  });
+  if (ctx.session.currentUser) {
+    const { activitiesList } = ctx.state;
+    await ctx.render('activities/local', {
+      activitiesList,
+      subscribeActivitiePath: (id) => ctx.router.url('subscribeActivity', id),
+      subscriptionLocalsPath: ctx.router.url('subscriptionLocals'),
+    });
+  } else {
+    ctx.redirect(ctx.router.url('index'));
+  }
 });
 
 module.exports = router;

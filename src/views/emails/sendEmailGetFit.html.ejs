@@ -1,0 +1,24 @@
+<h1>Notificacion de compra!</h1>
+
+<p>Se ha realizado una compra por los siguientes productos</p>
+
+<ul>
+    <% data.products.forEach((product) => { %>
+        <li>
+            <ul>
+                <li>Nombre producto: <%= product.name %></li>
+                <li>Tipo: <%= product.tipo %></li>
+                <li>Monto: <%= product.precio %></li>
+                <li>ID vendedor: <%= product.user.id %></li>
+                <li>Email vendedor: <%= product.user.email %></li>
+                <li>Vendedor: <%= product.user.name %></li>
+            </ul>
+        </li>
+
+    <% }); %>
+</ul>
+
+
+
+<p>Atentamente,</p>
+<p>Equipo GetFit</p>

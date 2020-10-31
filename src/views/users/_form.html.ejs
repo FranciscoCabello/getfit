@@ -1,5 +1,5 @@
 <main>
-    <form method='post' action='<%= pathForm %>'>
+    <form method='post' action='<%= pathForm %>' enctype = "multipart/form-data">
         <% if (locals.errors){ %>
             <div class='errors'>
                 <p>Error:</p>
@@ -28,7 +28,7 @@
                     Número: <input type='text' name='phone' value='<%= user.phone %>' placeholder="Ejemplo: +56966261252 (12 digitos)"/>
                 </div>
                 <div class='field'>
-                    Fotografía: <input type='text' name='photo' value='<%= user.photo %>' placeholder="Ejemplo: URL"/>
+                    Fotografía: <input type='file' name='photo' value='<%= user.photo %>' placeholder="Ejemplo: URL"/>
                 </div>
                 <div class='field'>
                     Email: <input type='text' name='email' value='<%= user.email %>' placeholder="Ejemplo: pedro@carcuro.com"/>

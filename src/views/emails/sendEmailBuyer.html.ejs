@@ -1,0 +1,17 @@
+<h1>En hora buena!</h1>
+<p>Se ha realizado la compra por:</p>
+<ul>
+    <% data.products.forEach((product) => { %>  
+        <li>
+            <ul>
+                <li>Nombre: <%= product.name %></li>
+                <li>Tipo: <%= product.tipo %></li>
+                <li>Precio: <%= product.precio %></li>
+            </ul>
+        </li>
+    <% }); %>
+    <li>Total: <%= data.priceCart %></li>
+</ul>
+
+<p>Atentamente,</p>
+<p>Equipo GetFit</p>

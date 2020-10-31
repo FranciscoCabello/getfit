@@ -1,0 +1,28 @@
+<main>
+    <div class="local-activities">
+        <article>
+            <p><strong>Nombre:</strong>
+                <%= activity.name %>
+            </p>
+            <p><strong>Dificultad:</strong>
+                <%= activity.dificulty %>
+            </p>
+            <p><strong>Capacidad</strong>
+                <%= activity.capacity %>
+            </p>
+            <p><strong>Horario</strong>
+                <%= activity.horarioI %> -
+                    <%= activity.horarioT %>
+            </p>
+            <P>
+                <strong>Inscritos:</strong>
+            <% if (subscribedAmount(activity.id)) { %>
+                <%= subscribedAmount(activity.id) %>
+                <% } else { %>
+                    0
+                <% } %>
+            </P>
+            <a href="<%= localPath %>">Volver al local</a>
+        </article>
+    </div>
+</main>    

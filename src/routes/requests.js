@@ -10,34 +10,6 @@ const PERMITTED_FIELDS = [
   'localId',
 ];
 
-async function localsNames(ctx, next) {
-  const locals = await ctx.orm.locals.findAll();
-  locals.forEach((local) => {
-    ctx.state[local.id] = local.name;
-  });
-  return next();
-}
-
-router.get('requests', '/', localsNames, async (ctx) => {
-  const requests = await ctx.orm.requests.findAll();
-  await ctx.render('requests/index', {
-    requests,
-    localsNames: ctx.state,
-    newRequestPath: ctx.router.url('requests-new'),
-    requestPath: (id) => ctx.router.url('request', id),
-    index: ctx.router.url('index'),
-  });
-});
-
-router.get('requests-new', '/:id/create', async (ctx) => {
-  const request = ctx.orm.requests.build();
-  return ctx.render('requests/new', {
-    request,
-    createRequestPath: ctx.router.url('requests-create', ctx.params.id),
-    localPath: ctx.router.url('viewLocalPublic', ctx.params.id),
-  });
-});
-
 router.post('requests-create', '/:id/creating', async (ctx) => {
   const request = await ctx.orm.requests.build({
     tipo: ctx.request.body.tipo,

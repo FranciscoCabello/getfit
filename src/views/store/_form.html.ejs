@@ -1,5 +1,5 @@
 <main>
-    <form method='post' action="<%= createRequestPath %>">
+    <form method='post' action="<%= createRequestPath %>" enctype = "multipart/form-data">
         <% if (locals.errors){ %>
             <div class='errors'>
                 <p>El local no se pudo crear debido a los siguientes errores:</p>
@@ -43,7 +43,7 @@
                 </div>
                 <div class='field'>
                     <label for='foto'>Foto:</label>
-                    <input type="text" name="foto" id='foto' placeholder="Ejemplo: URL" />
+                    <input type="file" name="foto" id='foto' placeholder="Ejemplo: URL" />
                 </div>
                 <div class='field'>
                     <div class='field'>

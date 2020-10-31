@@ -1,0 +1,43 @@
+<main>
+    <% if (availableProducts) {%>
+        <% availableProducts.forEach((product) => { %>
+            <div class="store-products">
+                <article>
+                    
+                        <p><strong>Producto:</strong>
+                            <%= product.name %>
+                        </p>
+                        <p><strong>Precio:</strong>
+                            <%= product.precio %>
+                        </p>
+                        <p><strong>Tipo:</strong>
+                            <%= product.tipo %>
+                        </p>
+                        <p><strong>Estado:</strong>
+                            <%= product.estado %>
+                        </p>
+                        <p><strong>Descripcion:</strong>
+                            <%= product.descripcion %>
+                        </p>
+                        <p>
+                            <img src="<%= product.foto %>" width="200" height="210" />
+                        </p>
+                   
+                </article>
+                <article>
+                    <form method="post" action="<%= discardProductCartPath(product.id) %>">
+                        <input type="submit" value="Eliminar del carrito"/>
+                    </form>
+                </article>
+            </div>
+        <% }); %>
+    <% } else { %>
+        <div>
+            <div>No tiene productos</div>
+        </div>
+    <% } %>
+    <div class="pre-footer">
+        <a href="<%= storePath %>">Seguir comprando</a>
+        <a href="<%= endShopping %>">Finalizar compra</a>
+    </div>
+</main>

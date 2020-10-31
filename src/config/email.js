@@ -4,12 +4,12 @@ module.exports = {
     service: 'SendGrid',
     // auth data always from ENV vars
     auth: {
-      user: process.env.SENDGRID_USER,
-      pass: process.env.SENDGRID_PASS,
+      user: 'apikey',
+      pass: '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',
     },
   },
   // defaults to be passed to nodemailer's emails
   defaults: {
-    from: 'template <template@example.org>',
+    from: 'Getfit <fcabello@uc.cl>',
   },
 };

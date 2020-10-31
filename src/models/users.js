@@ -63,6 +63,10 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
       },
     },
+    admin: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   }, {});
 
   users.beforeCreate(buildPasswordHash);
@@ -74,6 +78,7 @@ module.exports = (sequelize, DataTypes) => {
     users.ownerLocals = users.belongsToMany(models.locals, { through: 'ownerlocals', foreignKey: 'ownerid', onDelete: 'CASCADE' });
     users.activities = users.belongsToMany(models.activities, { through: 'userAct', foreignKey: 'userid', onDelete: 'CASCADE' });
     users.products = users.hasMany(models.products, { onDelete: 'CASCADE' });
+    users.bank = users.hasOne(models.bank, { onDelete: 'CASCADE' });
   };
 
   return users;

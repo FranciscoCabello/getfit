@@ -66,6 +66,11 @@ app.use(koaFlashMessage);
 
 // parse request body
 app.use(koaBody({
+  formidable: {
+    uploadDir: path.join(__dirname, 'tmp'),
+    keepExtensions: true,
+  },
+  urlencoded: true,
   multipart: true,
   keepExtensions: true,
 }));

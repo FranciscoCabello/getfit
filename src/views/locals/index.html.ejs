@@ -1,7 +1,12 @@
 <main>
     <h1>Locales</h1>
+    <form method="get" action="<%= searchPath %>" >
+        <input type="text" id="query" name='query' placeholder="Ejemplo: Nombre gimnasio"></input>
+        <input type='submit' value='Buscar' />
+    </form>
     <div class="locals-container">
-        <% localsApp.forEach(local => {%>
+        <% if (localsApp.length > 0) {%>
+            <% localsApp.forEach(local => {%>
             <section>
                 <h2>
                     <%= local.name %>
@@ -12,6 +17,9 @@
                 <a href='<%= localPath(local.id) %>'>Ver más</a>
             </section>
             <% }) %>
+        <% } else { %>
+            <p>Busqueda invalida</p>
+        <% } %>    
     </div>
     <div class="pre-footer">
         <a href='<%= index %>'>Home</a>

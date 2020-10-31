@@ -26,6 +26,34 @@
                 </p>
                 <a href='<%= pathForm %>'>Actualizar perfil</a>
             </section>
+            <section class="datos">
+                <% if (bankAccount) { %>
+                    <p>
+                        <strong>Titular:</strong>
+                        <%= bankAccount.name %> - <%= bankAccount.rut %>
+                    </p>
+                    <p>
+                        <strong>Cuenta:</strong>
+                        <%= bankAccount.account %>
+                    </p>
+                    <p>
+                        <strong>Tipo Cuenta:</strong>
+                        <%= bankAccount.type %>
+                    </p>
+                    <p>
+                        <strong>Banco:</strong>
+                        <%= bankAccount.bank %>
+                    </p>
+                    <form method='post' action="<%= deleteBankAccountPath %>">
+                        <input type='submit' value="Eliminar cuenta">
+                    </form>
+                <% } else { %>
+                    <p>
+                        <strong>Cuenta Bancaria:</strong>
+                        <a href="<%= createBankAccountPath %>">Agregar cuenta bancaria</a>
+                    </p>
+                <% } %>    
+            </section>
         </div>
         <div class="user-data">
             <section>

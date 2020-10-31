@@ -1,5 +1,7 @@
 const KoaRouter = require('koa-router');
 const bcrypt = require('bcrypt');
+const AWS = require('aws-sdk');
+const fs = require('fs');
 
 const router = new KoaRouter();
 
@@ -10,70 +12,81 @@ const USER_FIELDS = [
   'email',
   'phone',
   'photo',
+  'admin',
 ];
 
+const BANK_FIELDS = [
+  'name',
+  'account',
+  'bank',
+  'email',
+  'rut',
+  'type',
+  'userId',
+];
+
+const BUCKET_NAME = 'getfit-storage';
+const IAM_USER_KEY = 'AKIAJTLRY2ZHYJ2IT3LA';
+const IAM_USER_SSKEY = 'NbMdD5ZnUVgK91olHfc6d61pJegRJbWHCZp0m1Y1';
+
+async function uploadFileUsers(ctx, next) {
+  const files = ctx.request.files.photo;
+  const myFiles = Array.isArray(files) ? files : typeof files === "object" ? [files] : null;
+  if (myFiles) {
+    try {
+      const filePromises = myFiles.map((file) => {
+        const s3 = new AWS.S3({
+          accessKeyId: IAM_USER_KEY,
+          secretAccessKey: IAM_USER_SSKEY,
+          Bucket: BUCKET_NAME,
+        });
+        const { path, name, type } = file;
+        const body = fs.createReadStream(path);
+        const params = {
+          Bucket: 'getfit-storage/users',
+          Key: name,
+          Body: body,
+          ContentType: type,
+          ACL: 'public-read',
+        };
+        return new Promise((resolve, reject) => {
+          s3.upload(params, (error, data) => {
+            if (error) {
+              reject(error);
+              return next();
+            }
+            console.log(data);
+            resolve(data);
+          });
+        });
+      });
+      const results = await Promise.all(filePromises);
+      console.log('Results:', results);
+      ctx.request.body.photo = results[0].Location;
+    } catch (error) {
+      console.error(error);
+      ctx.state.error = error;
+    }
+  }
+  return next();
+}
+
 async function getUser(ctx, next) {
-  ctx.state.user = await ctx.orm.users.findByPk(ctx.session.currentUser.id);
-  return next();
-}
-
-async function getUsers(ctx, next) {
-  ctx.state.users = await ctx.orm.users.findAll();
-  return next();
-}
-
-async function localsNames(ctx, next) {
-  ctx.state.activities = await ctx.orm.activities.findAll();
-  const locals = await ctx.orm.locals.findAll();
-  locals.forEach((local) => {
-    ctx.state[local.id] = local.name;
-  });
-  return next();
-}
-
-async function actsUser(ctx, next) {
-  ctx.state.actUser = await ctx.orm.users.findByPk(ctx.session.currentUser.id, {
-    include: {
-      association: ctx.orm.users.activities,
-      as: 'activities',
-    },
-  });
-  return next();
-}
-
-async function subscription(ctx, next) {
-  const openLocalId = [];
-  ctx.state.subscription = [];
-  const relation = await ctx.orm.userlocal.findAll();
-  relation.forEach((rel) => {
-    if (rel.userid === ctx.session.currentUser.id) { openLocalId.push(rel); }
-  });
-  for (let index = 0; index < openLocalId.length; index++) {
-    // eslint-disable-next-line no-await-in-loop
-    let addSuscript = await ctx.orm.locals.findByPk(openLocalId[index].localid);
-    ctx.state.subscription.push(addSuscript);
+  if (ctx.session.currentUser) {
+    ctx.state.user = await ctx.orm.users.findByPk(ctx.session.currentUser.id);
   }
   return next();
 }
 
 async function owner(ctx, next) {
-  ctx.state.user = await ctx.orm.users.findByPk(ctx.session.currentUser.id, {
-    include: {
-      association: ctx.orm.users.ownerLocals,
-      as: 'locals',
-    },
-  });
-  return next();
-}
-
-async function getActData(ctx, next) {
-  const userAct = await ctx.orm.userAct.findAll();
-  userAct.forEach((data) => {
-    // eslint-disable-next-line max-len
-    if ((Number(data.actid) === Number(ctx.request.body.actid)) && (Number(ctx.params.id) === Number(data.userid))) {
-      ctx.state.destroyAct = data;
-    }
-  });
+  if (ctx.session.currentUser) {
+    ctx.state.user = await ctx.orm.users.findByPk(ctx.session.currentUser.id, {
+      include: {
+        association: ctx.orm.users.ownerLocals,
+        as: 'locals',
+      },
+    });
+  }
   return next();
 }
 
@@ -120,80 +133,28 @@ async function destroyRelations(ctx, next) {
 }
 
 async function loadProduct(ctx, next) {
-  ctx.state.products = await ctx.orm.products.findAll({ where: { userId: ctx.session.currentUser.id } });
+  if (ctx.session.currentUser) {
+    ctx.state.products = await ctx.orm.products.findAll({ where: { userId: ctx.session.currentUser.id } });
+  }
   return next();
 }
 
-router.get('users', '/', async (ctx) => {
-  console.log(ctx.session.currentUser);
-  await ctx.render('users/index', {
-    logIn: ctx.router.url('users-login'),
-    signUp: ctx.router.url('users-signup'),
-    activities: ctx.router.url('select-activities'),
-    subscribe: ctx.router.url('select-local'),
-    unsubscribeAct: ctx.router.url('unsubscribe-activities'),
-    index: ctx.router.url('index'),
-  });
-});
-
-router.get('select-activities', '/activities', localsNames, getUsers, async (ctx) => {
-  await ctx.render('users/selectActivities', {
-    users: ctx.state.users,
-    activities: ctx.state.activities,
-    localid: ctx.state,
-    relationPath: ctx.router.url('subscribe-activities-post'),
-  });
-});
-
-router.post('subscribe-activities-post', '/subscribeActivities', async (ctx) => {
-  const user = await ctx.orm.users.findByPk(Number(ctx.request.body.userid));
-  const activity = await ctx.orm.activities.findByPk(Number(ctx.request.body.activityid));
-  try {
-    const activitySub = await ctx.orm.userAct.build({
-      actid: activity.id,
-      userid: user.id,
-    });
-    await activitySub.save();
-    await ctx.render('users/index', {
-      logIn: ctx.router.url('users-login'),
-      signUp: ctx.router.url('users-signup'),
-      activities: ctx.router.url('select-activities'),
-      subscribe: ctx.router.url('select-local'),
-      unsubscribeAct: ctx.router.url('unsubscribe-activities'),
-      index: ctx.router.url('index'),
-    });
-  } catch (error) {
-    ctx.redirect(ctx.router.url('select-activities'));
+async function loadBank(ctx, next) {
+  if (ctx.session.currentUser) {
+    ctx.state.bank = await ctx.orm.bank.findOne({ where: { userId: ctx.session.currentUser.id } });
   }
-});
+  return next();
+}
 
-router.get('unsubscribe-activities', '/unsubscribe_activities', async (ctx) => {
-  const users = await ctx.orm.users.findAll();
-  await ctx.render('users/selectUser', {
-    users,
-    unsubscribePath: (id) => ctx.router.url('unsubscribe-activites-id', id),
-  });
-});
-
-router.get('unsubscribe-activites-id', '/:id/unsubscribe', getUser, async (ctx) => {
-  await ctx.render('users/unsubscribeActivity', {
-    activities: ctx.state.actUser.activities,
-    unsubscribePath: ctx.router.url('unsubsribe-activities-id-bd', ctx.state.actUser.id),
-  });
-});
-
-router.post('unsubsribe-activities-id-bd', '/:id/unsubscribePost', getActData, async (ctx) => {
-  const { destroyAct } = ctx.state;
-  await destroyAct.destroy();
-  await ctx.render('users/index', {
-    logIn: ctx.router.url('users-login'),
-    signUp: ctx.router.url('users-signup'),
-    activities: ctx.router.url('select-activities'),
-    subscribe: ctx.router.url('select-local'),
-    unsubscribeAct: ctx.router.url('unsubscribe-activities'),
-    index: ctx.router.url('index'),
-  });
-});
+async function verifyRut(ctx, next) {
+  const { rut } = ctx.request.body;
+  if (rut) {
+    console.log(rut);
+  } else {
+    ctx.state.errorAccount = ['Rut invalido'];
+  }
+  return next();
+}
 
 router.get('users-signup', '/signup', async (ctx) => {
   const user = await ctx.orm.users.build();
@@ -203,13 +164,19 @@ router.get('users-signup', '/signup', async (ctx) => {
   });
 });
 
-router.post('users-signup-post', '/createUser', async (ctx) => {
-  try {
-    const createUser = await ctx.orm.users.build(ctx.request.body);
-    await createUser.save({ fields: USER_FIELDS });
-    ctx.redirect(ctx.router.url('users-login'));
-  } catch (error) {
+router.post('users-signup-post', '/createUser', uploadFileUsers, async (ctx) => {
+  if (ctx.state.error) {
     ctx.redirect(ctx.router.url('users-signup'));
+  } else {
+    try {
+      ctx.request.body.admin = 0;
+      console.log(ctx.request.body.admin);
+      const createUser = await ctx.orm.users.build(ctx.request.body);
+      await createUser.save({ fields: USER_FIELDS });
+      ctx.redirect(ctx.router.url('users-login'));
+    } catch (error) {
+      ctx.redirect(ctx.router.url('users-signup'));
+    }
   }
 });
 
@@ -234,6 +201,7 @@ router.post('user-login-post', '/loginPost', async (ctx) => {
       ctx.session.currentUser = {
         id: user.id,
         name: user.name,
+        cart: [],
       };
       ctx.redirect(ctx.router.url('index'));
     }
@@ -245,38 +213,90 @@ router.post('user-login-post', '/loginPost', async (ctx) => {
   }
 });
 
-router.get('users-logout', 'logOut', async (ctx) => {
-  ctx.session.currentUser = null;
-  ctx.redirect(ctx.router.url('index'));
+router.get('users-logout', '/logOut', async (ctx) => {
+  if (ctx.state.currentUser) {
+    ctx.session.currentUser = null;
+    ctx.redirect(ctx.router.url('index'));
+  } else {
+    ctx.redirect(ctx.router.url('index'));
+  }
 });
 
-router.get('userProfile', '/profile', owner, loadProduct, async (ctx) => {
-  const { user, products } = ctx.state;
-  const ownedLocals = user.locals;
-  await ctx.render('users/profile', {
-    user,
-    pathForm: ctx.router.url('user-update', ctx.session.currentUser.id),
-    del: ctx.router.url('user-delete', ctx.session.currentUser.id),
-    index: ctx.router.url('index'),
-    ownedLocals,
-    viewLocalOwnerPath: (id) => ctx.router.url('viewLocalOwner', id),
-    subscriptionLocalPath: ctx.router.url('subscriptionLocals', ctx.session.currentUser.id),
-    subscriptionActivitiesPath: ctx.router.url('subscribedActivities', ctx.session.currentUser.id),
-    products,
-    destroyProductPath: (id) => ctx.router.url('deleteProduct', id),
-  });
+router.get('userProfile', '/profile', owner, loadProduct, loadBank, async (ctx) => {
+  if (ctx.session.currentUser) {
+    const { user, products, bank } = ctx.state;
+    const ownedLocals = user.locals;
+    await ctx.render('users/profile', {
+      user,
+      pathForm: ctx.router.url('user-update', ctx.session.currentUser.id),
+      del: ctx.router.url('user-delete', ctx.session.currentUser.id),
+      index: ctx.router.url('index'),
+      ownedLocals,
+      bankAccount: bank,
+      createBankAccountPath: ctx.router.url('createBankAccount'),
+      deleteBankAccountPath: ctx.router.url('deleteBankAccount'),
+      viewLocalOwnerPath: (id) => ctx.router.url('viewLocalOwner', id),
+      subscriptionLocalPath: ctx.router.url('subscriptionLocals', ctx.session.currentUser.id),
+      subscriptionActivitiesPath: ctx.router.url('subscribedActivities', ctx.session.currentUser.id),
+      products,
+      destroyProductPath: (id) => ctx.router.url('deleteProduct', id),
+    });
+  } else {
+    ctx.redirect(ctx.router.url('index'));
+  }
+});
+
+router.get('createBankAccount', '/bankAccount', async (ctx) => {
+  if (ctx.session.currentUser) {
+    await ctx.render('bank/create', {
+      userProfilePath: ctx.router.url('userProfile'),
+      addBankAccount: ctx.router.url('creatingBankAccount'),
+    });
+  } else {
+    ctx.redirect(ctx.router.url('index'));
+  }
+});
+
+router.post('creatingBankAccount', '/creating/bankAccount', verifyRut, async (ctx) => {
+  ctx.request.body.userId = ctx.session.currentUser.id;
+  if (!(ctx.state.errorAccount)) {
+    try {
+      const createBankAccount = await ctx.orm.bank.build(ctx.request.body);
+      await createBankAccount.save({ fields: BANK_FIELDS });
+      ctx.redirect(ctx.router.url('userProfile'));
+    } catch (error) {
+      console.log(error);
+      await ctx.render('bank/create', {
+        errors: ctx.state.errorAccount,
+        userProfilePath: ctx.router.url('userProfile'),
+        addBankAccount: ctx.router.url('creatingBankAccount'),
+      });
+    }
+  } else {
+    await ctx.render('bank/create', {
+      errors: ctx.state.errorAccount,
+      userProfilePath: ctx.router.url('userProfile'),
+      addBankAccount: ctx.router.url('creatingBankAccount'),
+    });
+  }
+});
+
+router.post('deleteBankAccount', '/delete/bankAccount', loadBank, async (ctx) => {
+  await ctx.state.bank.destroy();
+  ctx.redirect(ctx.router.url('userProfile'));
 });
 
 router.get('user-update', '/:id/update', getUser, async (ctx) => {
-  const { user } = ctx.state;
-  console.log(user);
-  await ctx.render('users/signup', {
-    user,
-    pathForm: ctx.router.url('user-update-post', user.id),
-  });
+  if (ctx.session.currentUser) {
+    const { user } = ctx.state;
+    await ctx.render('users/signup', {
+      user,
+      pathForm: ctx.router.url('user-update-post', user.id),
+    });
+  }
 });
 
-router.post('user-update-post', '/:id/update/post', getUser, async (ctx) => {
+router.post('user-update-post', '/:id/update/post', getUser, uploadFileUsers, async (ctx) => {
   const { user } = ctx.state;
   await user.update(ctx.request.body);
   ctx.redirect(ctx.router.url('user-profile', user.id));

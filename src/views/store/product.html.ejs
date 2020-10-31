@@ -31,6 +31,11 @@
                 <%= userInfo.email %>
             </p>
         </article>
+        <article>
+            <form method="post" action="<%= addCartPath %>">
+                <input type="submit" value="Agregar al carrito" />
+            </form>
+        </article>
     </div>
     <a href='<%= storePath %>'> Volver a la tienda</a>
 </main>

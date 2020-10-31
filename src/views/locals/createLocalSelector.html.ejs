@@ -1,6 +1,8 @@
 <main>
     <div class="pre-footer">
         <a href='<%= createOwnerLocal %>'>Crear nuevo local con dueno</a>
+        <% if (admin) { %>
         <a href='<%= createPublicLocal %>'>Crear nuevo local publico</a>
+        <% } %>
     </div>
 </main>

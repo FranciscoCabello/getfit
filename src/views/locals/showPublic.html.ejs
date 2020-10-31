@@ -28,13 +28,10 @@
                 <strong>Capacidad:</strong>
                 <%= local.capacidad %>
             </p>
-            <% if (locals.currentUser) { %>
+            <% if (locals.currentUser && admin) { %>
                 <p>
                     <form method="post" action="<%= subcribeLocal %>">
                         <input type='submit' value='Suscribirse' />
-                    </form>
-                    <form method="get" action="<%= createRequestPath %>">
-                        <input type='submit' value='Dejar un comentario' />
                     </form>
                 </p>
                 <% } %>
@@ -67,6 +64,7 @@
                                 0
                                 <% } %>
                 </P>
+                <a href="<%= activitiePath(activity.id) %>">Detalle</a>
             </article>
             <% }); %>
     </div>
@@ -83,5 +81,11 @@
             </article>
             <% }); %>
     </div>
+    <% if (locals.currentUser) { %>
+        <div>
+            <h2>Deja un comentario</h2>
+            <%- include('../requests/_form') %>
+        </div>
+    <% } %>
     <a href='<%= localsPath %>'> Volver a página principal </a>
 </main>
