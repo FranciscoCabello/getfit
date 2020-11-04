@@ -25,9 +25,9 @@ const BANK_FIELDS = [
   'userId',
 ];
 
-const BUCKET_NAME = 'getfit-storage';
-const IAM_USER_KEY = 'AKIAJTLRY2ZHYJ2IT3LA';
-const IAM_USER_SSKEY = 'NbMdD5ZnUVgK91olHfc6d61pJegRJbWHCZp0m1Y1';
+const BUCKET_NAME = process.env.BUCKET_NAME_AWS;
+const IAM_USER_KEY = process.env.ACCESS_KEY_ID_AWS_STORAGE;
+const IAM_USER_SSKEY = process.env.SECRET_ACCESS_KEY_AWS_STORAGE;
 
 async function uploadFileUsers(ctx, next) {
   const files = ctx.request.files.photo;

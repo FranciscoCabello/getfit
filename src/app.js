@@ -1,5 +1,6 @@
 const path = require('path');
 const Koa = require('koa');
+require('dotenv').config();
 const koaBody = require('koa-body');
 const koaLogger = require('koa-logger');
 const koaFlashMessage = require('koa-flash-message').default;
