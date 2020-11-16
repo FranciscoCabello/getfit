@@ -1,4 +1,3 @@
-
 <form method='post' action="<%= createRequestPath %>">
     <% if (locals.errors){ %>
         <div class='errors'>
@@ -25,12 +24,12 @@
                     <option value="Ventilacion">Ventilacion</option>
                     <option value="Otros">Otros</option>
                 </select>
-            <div class='field'>
-                <label for='comentario'>Comentario</label>
-                <textarea name="comentario" id='comentario' cols="30" rows="4" placeholder="Ejemplo: Excelente servicio!"></textarea>
-            </div>
-            <div class='actions'>
-                <input type='submit' value='Crear' />
-            </div>
-    </form>
+                <div class='field'>
+                    <label for='comentario'>Comentario</label>
+                    <textarea name="comentario" id='comentario' cols="30" rows="4" placeholder="Ejemplo: Excelente servicio!"></textarea>
+                </div>
+                <div class='actions' id="button-helper">
+                    <input type='submit' value='Crear' />
+                </div>
+</form>
 </main>

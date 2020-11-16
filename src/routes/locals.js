@@ -8,7 +8,6 @@ const router = new KoaRouter();
 const BUCKET_NAME = process.env.BUCKET_NAME_AWS;
 const IAM_USER_KEY = process.env.ACCESS_KEY_ID_AWS_STORAGE;
 const IAM_USER_SSKEY = process.env.SECRET_ACCESS_KEY_AWS_STORAGE;
-
 const PERMITTED_FIELDS = [
   'name',
   'photo',
@@ -256,11 +255,15 @@ router.get('locals', '/', locals, searchBar, async (ctx) => {
 
 router.get('createLocalSelector', '/selector', verifyAdmin, async (ctx) => {
   if (ctx.session.currentUser) {
-    await ctx.render('locals/createLocalSelector', {
-      admin: ctx.state.admin,
-      createOwnerLocal: ctx.router.url('createPrivateLocal'),
-      createPublicLocal: ctx.router.url('createPublicLocal'),
-    });
+    if (ctx.state.admin) {
+      await ctx.render('locals/createLocalSelector', {
+        admin: ctx.state.admin,
+        createOwnerLocal: ctx.router.url('createPrivateLocal'),
+        createPublicLocal: ctx.router.url('createPublicLocal'),
+      });
+    } else {
+      ctx.redirect(ctx.router.url('createPrivateLocal'));
+    }
   } else {
     ctx.redirect(ctx.router.url('index'));
   }
@@ -447,6 +450,20 @@ router.get('subscriptionLocals', '/subscription', subscriptions, async (ctx) => 
 
 router.post('deleteSubscription', '/:id/delete/subscription', activities, deleteActivities, deleteSubscriptionLocal, async (ctx) => {
   ctx.redirect(ctx.router.url('subscriptionLocals'));
+});
+
+router.get('getCommentReact', '/:id/get/comments', loadLocal, comments, async (ctx) => {
+  ctx.body = ctx.state.comments;
+  ctx.set('Access-Control-Allow-Origin', '*');
+  ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  ctx.set('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
+});
+
+router.get('getLocals', '/get/locals', locals, async (ctx) => {
+  ctx.body = ctx.state.localsApp;
+  ctx.set('Access-Control-Allow-Origin', '*');
+  ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  ctx.set('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
 });
 
 module.exports = router;

@@ -101,14 +101,14 @@ async function destroyRelations(ctx, next) {
   relation.forEach((rel) => {
     if (rel.userid === ctx.state.user.id) { openLocalId.push(rel); }
   });
-  for (let index=0; index<openLocalId.length; index++) {
+  for (let index = 0; index < openLocalId.length; index++) {
     // eslint-disable-next-line no-await-in-loop
     await openLocalId[index].destroy();
   }
   actsUser.forEach((dataAct) => {
     if (dataAct.userid === user.id) { destroyActs.push(dataAct); }
   });
-  for (let index=0; index < destroyActs.length; index++) {
+  for (let index = 0; index < destroyActs.length; index++) {
     // eslint-disable-next-line no-await-in-loop
     await destroyActs[index].destroy();
   }
@@ -118,7 +118,7 @@ async function destroyRelations(ctx, next) {
       if (dataLocal.id === ownloc.localid) { destroyOwnerLocal.push({ relation: ownloc, local: dataLocal }); }
     });
   });
-  for (let pos=0; pos<destroyOwnerLocal.length; pos++) {
+  for (let pos = 0; pos < destroyOwnerLocal.length; pos++) {
     // eslint-disable-next-line no-await-in-loop
     await destroyOwnerLocal[pos].relation.destroy();
     // eslint-disable-next-line no-await-in-loop
@@ -166,7 +166,12 @@ router.get('users-signup', '/signup', async (ctx) => {
 
 router.post('users-signup-post', '/createUser', uploadFileUsers, async (ctx) => {
   if (ctx.state.error) {
-    ctx.redirect(ctx.router.url('users-signup'));
+    const user = await ctx.orm.users.build();
+    await ctx.render('users/signup', {
+      errors: 'Foto invalida',
+      user,
+      pathForm: ctx.router.url('users-signup-post'),
+    });
   } else {
     try {
       ctx.request.body.admin = 0;
@@ -175,7 +180,12 @@ router.post('users-signup-post', '/createUser', uploadFileUsers, async (ctx) => 
       await createUser.save({ fields: USER_FIELDS });
       ctx.redirect(ctx.router.url('users-login'));
     } catch (error) {
-      ctx.redirect(ctx.router.url('users-signup'));
+      const user = await ctx.orm.users.build();
+      await ctx.render('users/signup', {
+        errors: error.errors,
+        user,
+        pathForm: ctx.router.url('users-signup-post'),
+      });
     }
   }
 });
@@ -184,7 +194,12 @@ router.get('users-login', '/login', async (ctx) => {
   await ctx.render('users/login', {
     error: null,
     loginPath: ctx.router.url('user-login-post'),
+    indexPath: ctx.router.url('redirect-login'),
   });
+});
+
+router.get('redirect-login', '/login/redirect', async (ctx) => {
+  ctx.redirect(ctx.router.url('index'));
 });
 
 router.post('user-login-post', '/loginPost', async (ctx) => {
@@ -193,10 +208,16 @@ router.post('user-login-post', '/loginPost', async (ctx) => {
   if (user) {
     const authenticated = await bcrypt.compare(password, user.password);
     if (!authenticated) {
-      await ctx.render('users/login', {
-        error: 'Usuario o contrasena incorrecta',
-        loginPath: ctx.router.url('user-login-post'),
-      });
+      ctx.redirect(ctx.router.url('users-login'));
+      /*switch (ctx.accepts(['json'])) {
+        case 'json':
+          ctx.status = 201;
+          ctx.body = ['Fail'];
+          break;
+        default:
+          ctx.throw(406);
+          break;
+      }*/
     } else {
       ctx.session.currentUser = {
         id: user.id,
@@ -204,12 +225,27 @@ router.post('user-login-post', '/loginPost', async (ctx) => {
         cart: [],
       };
       ctx.redirect(ctx.router.url('index'));
+      /*switch (ctx.accepts(['json'])) {
+        case 'json':
+          ctx.status = 201;
+          ctx.body = ['Success'];
+          break;
+        default:
+          ctx.throw(406);
+          break;
+      }*/
     }
   } else {
-    await ctx.render('users/login', {
-      error: 'Usuario o contrasena incorrecta',
-      loginPath: ctx.router.url('user-login-post'),
-    });
+    ctx.redirect(ctx.router.url('users-login'));
+    /*switch (ctx.accepts(['json'])) {
+      case 'json':
+        ctx.status = 201;
+        ctx.body = ['Fail'];
+        break;
+      default:
+        ctx.throw(406);
+        break;
+    }*/
   }
 });
 
@@ -282,7 +318,8 @@ router.post('creatingBankAccount', '/creating/bankAccount', verifyRut, async (ct
 });
 
 router.post('deleteBankAccount', '/delete/bankAccount', loadBank, async (ctx) => {
-  await ctx.state.bank.destroy();
+  const { bank } = ctx.state;
+  await bank.destroy();
   ctx.redirect(ctx.router.url('userProfile'));
 });
 
@@ -299,7 +336,7 @@ router.get('user-update', '/:id/update', getUser, async (ctx) => {
 router.post('user-update-post', '/:id/update/post', getUser, uploadFileUsers, async (ctx) => {
   const { user } = ctx.state;
   await user.update(ctx.request.body);
-  ctx.redirect(ctx.router.url('user-profile', user.id));
+  ctx.redirect(ctx.router.url('userProfile'));
 });
 
 router.post('user-delete', '/:id/deleteUser', destroyRelations, async (ctx) => {

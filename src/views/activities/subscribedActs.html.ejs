@@ -1,28 +1,42 @@
-<main>
-    <table>
-        <tr>
-            <th>Nombre</th>
-            <th>Dificultad</th>
-            <th></th>
-        </tr>
-        <% userActivities.activities.forEach((activity) => { %>
-            <tr>
-                <td>
-                    <%= activity.name %>
-                </td>
-                <td>
-                    <%= activity.dificulty %>
-                </td>
-                <td>
-                    <form method="post" action="<%= deleteSubsActPath(activity.id) %>"><input type="submit" value='Cancelar suscripcion' /></form>
-                </td>
-            </tr>
-            <% }); %>
-    </table>
-    <form method="get" action="<%= profileUserPath %>">
-        <input type='submit' value="Ir a mi perfil" />
-    </form>
-    <form method="get" action="<%= subscriptionLocalsPath %>">
-        <input type='submit' value="Volver a locales suscritos" />
-    </form>
-</main>
+<div class="content-area">
+    <h1 class="section-header">
+        Actividades
+    </h1>
+    <div class="display-buttons-views">
+        <a href='<%= subscriptionLocalsPath %>' class="btn-suscripciones-custom">Suscripciones</a>
+    </div>
+</div>
+<div class="content-area">
+    <section>
+        <div class="tbl-header">
+          <table cellpadding="0" cellspacing="0" border="0">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Dificultad</th>
+                <th>Capacidad</th>
+                <th>Inicio</th>
+                <th>Termino</th>
+                <th>-</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <div class="tbl-content">
+            <table cellpadding="0" cellspacing="0" border="0">
+                <tbody>
+                <% userActivities.activities.forEach((activity) => { %>
+                    <tr>
+                        <td><%= activity.name %></td>
+                        <td><%= activity.dificulty %></td>
+                        <td><%= activity.capacity %></td>
+                        <td><%= activity.horarioI %></td>
+                        <td><%= activity.horarioT %></td>
+                        <td><form method="post" action="<%= deleteSubsActPath(activity.id) %>"><input type="submit" value='Eliminar' class="btn-custom-delete"/></form></td>
+                    </tr>
+                <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </section>  
+</div>

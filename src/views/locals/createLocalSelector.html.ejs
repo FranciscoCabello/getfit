@@ -1,8 +1,12 @@
-<main>
-    <div class="pre-footer">
-        <a href='<%= createOwnerLocal %>'>Crear nuevo local con dueno</a>
-        <% if (admin) { %>
-        <a href='<%= createPublicLocal %>'>Crear nuevo local publico</a>
-        <% } %>
+<div class="content-area">
+    <div class="items-table">
+        <div class="content-area">
+            <div class="display-table-button">
+                <a href='<%= createOwnerLocal %>' class="btn-create-prived-local">Crear nuevo local con dueño</a>
+            </div>
+            <div class="display-table-button">
+                <a href='<%= createPublicLocal %>' class="btn-create-public-local">Crear nuevo local público</a>
+            </div>
+        </div>
     </div>
-</main>
+</div>

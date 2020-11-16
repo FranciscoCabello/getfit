@@ -1,31 +1,24 @@
-<main>
-    <h1>GetFit app</h1>
-    <div class="main-container">
-        <article class="main-article">
-            <section>
-                <h3>Acerca de nosotros</h3>
-                <p>
-                    Aplicación que tiene como objetivo facilitar la realización de deporte mediante un portal de acceso rápido a diferentes actividades del mundo del fitness.
-                </p>
-            </section>
-        </article>
-
-        <article class="main-article">
-            <section>
-                <% if (locals.currentUser){ %>
-                    <h3>¡Bienvenido/a!</h3>
-                    <p>
-                        ¡Hola
-                        <strong><%= locals.currentUser.name %></strong>! ¡Que bueno que estés de vuelta en GetFit!
-
-                    </p>
-                    <%} else{ %>
-                        <h3>Únete a nosotros</h3>
-                        <p>
-                            Inscríbete con nosotros <a href="<%= locals.signUp %>">Aquí</a>
-                        </p>
-                        <% } %>
-            </section>
-        </article>
+<div class="content-section">
+    <h1 class="items-table">GETFIT app</h1>
+    <% if (locals.currentUser){ %>
+        <div class="files-table">
+            <h3 class="items-table">¡Bienvenido/a!</h3>
+            <p>¡Hola <strong><%= locals.currentUser.name %></strong>!</p>
+            <p>¡Que bueno que estés de vuelta en GetFit!</p>
+        </div>
+    <% } %>
+    <div class="files-table">
+        <h3 class="items-table">Acerca de nosotros</h3>
+            <p>
+                Aplicación que tiene como objetivo facilitar la realización de deporte mediante un portal de acceso rápido a diferentes actividades del mundo del fitness.
+            </p>
     </div>
-</main>
+    <% if (!locals.currentUser){ %>
+        <div class="files-table">
+            <h3 class="items-table">Únete a nosotros</h3>
+            <p>
+                Inscríbete con nosotros <a href="<%= locals.signUp %>">Aquí</a>
+            </p>
+        </div>
+    <% } %>
+</div>

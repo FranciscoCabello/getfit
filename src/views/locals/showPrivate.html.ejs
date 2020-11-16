@@ -1,77 +1,92 @@
-<main>
-    <h1>
-        <%= local.name %>
-    </h1>
-    <div class="priv-local-info">
-        <section>
-            <p><strong>Dirección:</strong>
-                <%= local.ubicacion %>
-            </p>
-            <p><strong>Horario apertura:</strong>
-                <%= local.horarioA %>
-            </p>
-            <p><strong>Horario cierre:</strong>
-                <%= local.horarioC %>
-            </p>
-        </section>
-        <h2>Actividades</h2>
-        <div>
-            <% activitiesList.forEach((activity) => { %>
-                <article>
-                    <p><strong>Nombre:</strong>
-                        <%= activity.name %>
-                    </p>
-                    <p><strong>Dificultad:</strong>
-                        <%= activity.dificulty %>
-                    </p>
-                    <p><strong>Capacidad</strong>
-                        <%= activity.capacity %>
-                    </p>
-                    <p><strong>Horario</strong>
-                        <%= activity.horarioI %> -
-                            <%= activity.horarioT %>
-                    </p>
-                    <p>
-                        <form method="get" action="<%= editActivityPath(local.id, activity.id) %>"><input type="submit" value="Edit activity"></input>
+<div class="content-area">
+    <div class="content-section-area">
+        <div class="items-table">
+            <h1 class="items-table">Informacion</h1>
+            <div class="display-administrable">
+                <div class="form-div">
+                    <img src="<%= local.photo %>" width="250" height="300"/>
+                </div>
+                <div class="form-main">
+                    <div class="form-div">
+                        <form class="form" >
+                            <p>Datos:</p>
+                            <input name="name" type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" value="<%= local.name %>" id="name" readonly/>
+                            <input name="name" type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" value="<%= local.ubicacion %>" id="name" readonly/>
+                            <input name="name" type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" value="<%= local.horarioA %>" id="name" readonly/>
+                            <input name="name" type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" value="<%= local.horarioC %>" id="name" readonly/>
+                            <a href='<%= editLocalPath %>' class="btn-custom-act-profile">Actualizar local</a>
                         </form>
-                    </p>
-                    <p>
-                        <form method="post" action="<%= deleteActivityPath(local.id, activity.id) %>"><input type="submit" value="Delete activity"></input>
-                        </form>
-                    </p>
-                </article>
-                <% }); %>
-        </div>
-        <% if (comms.length > 0) {%>
-            <h2>Comentarios:</h2>
-            <div>
-                <% comms.forEach((coment) => { %>
-                    <article>
-                        <p><strong>Tipo:</strong>
-                            <%= coment.tipo %>
-                        </p>
-                        <p><strong>Comentario:</strong>
-                            <%= coment.comentario %>
-                        </p>
-                        <p>
-                            <form method="post" action="<%= deleteCommentPath(coment.id) %>"><input type="submit" value="Eliminar"></input>
-                            </form>
-                        </p>
-                    </article>
-                    <% }); %>
+                    </div>
+                </div>
             </div>
-            <% } %>
-                <form method="get" action="<%= createActivitiesPath %>">
-                    <input type='submit' value="Crear actividad" />
-                </form>
-                <form method="get" action="<%= editLocalPath %>">
-                    <input type='submit' value="Editar info del local" />
-                </form>
-                <form method="post" action="<%= deleteLocalPath %>">
-                    <input type='submit' value='Delete local' />
-                </form>
-                <form method="get" action="<%= userProfilePath %>">
-                    <input type='submit' value="Volver al perfil" />
-                </form>
+            <div class="display-table-button">
+                <form method="post" action="<%= deleteLocalPath %>"><input type='submit' value='Eliminar' class="btn-custom-delete"/></form>
+            </div>
+        </div>
+        <div class="items-table">
+            <h1 class="items-table">Comentarios</h1>
+            <div class="tbl-header">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                        <tr>
+                            <th><p>Tipo</p></th>
+                            <th><p>Comentario</p></th>
+                            <th><p>-</p></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tbl-content">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <tbody>
+                        <% comms.forEach((coment) => { %>
+                            <tr>
+                                <td><%= coment.tipo %></td>
+                                <td><%= coment.comentario %></td>
+                                <td><form method="post" action="<%= deleteCommentPath(coment.id) %>"><input type="submit" value="Eliminar" class="btn-custom-delete"></input></form></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-</main>
+    <div class="content-section-area">
+        <div class="items-table">
+            <h1 class="items-table">Actividades</h1>
+            <div class="tbl-header">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                        <tr>
+                            <th><p>Nombre</p></th>
+                            <th><p>Dificultad</p></th>
+                            <th><p>Capacidad</p></th>
+                            <th><p>Horario</p></th>
+                            <th><p>-</p></th>
+                            <th><p>-</p></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tbl-content">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <tbody>
+                        <% activitiesList.forEach((activity) => { %>
+                            <tr>
+                                <td><%= activity.name %></td>
+                                <td><%= activity.dificulty %></td>
+                                <td><%= activity.capacity %></td>
+                                <td><%= activity.horarioI %><br><%= activity.horarioT %></td>
+                                <td><a href="<%= editActivityPath(local.id, activity.id) %>" class="btn-custom-edit">Editar</a></td>
+                                <td><form method="post" action="<%= deleteActivityPath(local.id, activity.id) %>"><input type="submit" value="Eliminar" class="btn-custom-delete"></input></form></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+            <div class="display-table-button">
+                <a href="<%= createActivitiesPath %>" class="btn-custom-create-activity">Crear actividad</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,54 +1,6 @@
-<main>
-    <form method='post' action="<%= createActivitiesPath %>">
-        <% if (locals.errors){ %>
-            <div class='errors'>
-                <p>La actividad no se pudo crear debido a los siguientes errores:</p>
-                <ul>
-                    <% errors.forEach(error =>  { %>
-                        <li>
-                            <%= error.path%>:
-                                <%= error.message %>
-                        </li>
-                        <% }) %>
-                </ul>
-            </div>
-            <% } %>
-                <div class='field'>
-                    <div class='field'>
-                        <label for='name'>Nombre</label>
-                        <input type='text' id='name' name='name' />
-                    </div>
-                    <div class='field'>
-                        <label for="dificulty">Dificultad: </label>
-                        <select name="dificulty">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label for='capacity'>Capacidad:</label>
-                        <input type='number' id='capacity' name='capacity' placeholder="Ejemplo: 15"/>
-                    </div>
-                    <div class='field'>
-                        <label for='horarioI'>Horario inicio:</label>
-                        <input type='time' id='horarioI' name='horarioI' placeholder="Ejemplo: 08:00"/>
-                    </div>
-                    <div class='field'>
-                        <label for='horarioT'>Horario termino:</label>
-                        <input type='time' id='horarioT' name='horarioT' placeholder="Ejemplo: 12:00"/>
-                    </div>
-                </div>
-                <div class='actions'>
-                    <input type='submit' value='Crear' />
-                </div>
-    </form>
-    <a href='<%= viewLocalOwner %>'>Volver al local</a>
-</main>
+<div class="content-area">
+    <div class="items-table">
+        <h1 class="items-table">Crear actividad</h1>
+        <%- include('_form') %>
+    </div>
+</div>

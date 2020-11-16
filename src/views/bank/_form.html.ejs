@@ -1,8 +1,5 @@
-<div class="creditCardForm">
-    <div class="heading">
-        <h1>Confirm Purchase</h1>
-    </div>
-    <div class="payment">
+<div class="form-main">
+    <div class="form-div">
         <form method="post" action="<%= addBankAccount %>">
             <% if (locals.errors){ %>
                 <div class='errors'>
@@ -18,15 +15,15 @@
                 <% } %>
             <div class="field">
                 <label for="name">Nombre titular:</label>
-                <input type="text" class="form-control" name="name" placeholder="Ejemplo: Pedro Carcuro">
+                <input type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" name="name" placeholder="Ejemplo: Pedro Carcuro">
             </div>
             <div class="field">
                 <label for="account">Numero cuenta:</label>
-                <input type="text" class="form-control" name="account" placeholder="Ejemplo: 123456789">
+                <input type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" name="account" placeholder="Ejemplo: 123456789">
             </div>
             <div class="field">
                 <label>Banco</label>
-                <select name="bank">
+                <select name="bank" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input">
                     <option value="Banco Bice">Banco Bice</option>
                     <option value="Banco Consorcio">Banco Consorcio</option>
                     <option value="Banco de Chile-Edwards-Citi">Banco de Chile-Edwards-Citi</option>
@@ -49,15 +46,15 @@
             </div>
             <div class="field">
                 <label for="email">Email</label>
-                <input type="text" class="form-control" name="email" placeholder="Ejemplo: pedro@carcuro.com">
+                <input type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" name="email" placeholder="Ejemplo: pedro@carcuro.com">
             </div>
             <div class="field">
                 <label for="rut">Rut</label>
-                <input type="text" class="form-control" name="rut" placeholder="Ejemplo: 11.111.111-1 (Con puntos y guion).">
+                <input type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" name="rut" placeholder="Ejemplo: 11.111.111-1 (Con puntos y guion).">
             </div>
             <div class="field">
                 <label>Tipo cuenta:</label>
-                <select name="type">
+                <select name="type" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input">
                     <option value="Cuenta ahorro">Cuenta ahorro</option>
                     <option value="Cuenta vista - rut">Cuenta vista - rut</option>
                     <option value="Cuenta corriente">Cuenta corriente</option>
@@ -65,12 +62,14 @@
             </div>
             
             <div class="actions">
-                <input type="submit" value="Agregar">
+                <input type="submit" value="Aceptar" class="btn-link-accept">
             </div>
         </form>
 
     </div>
-    <div>
-        <a href="<%= userProfilePath %>">Volver al perfil</a>
+</div>
+<div class="content-area">
+    <div class="display-table-button">
+        <a href='<%= userProfilePath %>' class="btn-custom-back-local">Volver al perfil</a>
     </div>
 </div>

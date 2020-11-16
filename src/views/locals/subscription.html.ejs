@@ -1,14 +1,37 @@
-
-<main>
-    <h1>Suscripciones</h1>
-    <div class="locals-container">
-        <% listLocals.forEach((local) => { %>
-            <section>
-                <%= local.name %> --
-                    <a href="<%= showLocalPath(local.id) %>">Ver local</a> --
-                    <a href="<%= showActivitiesPath(local.id) %>">Mostrar actividades</a> --
-                    <form method="post" action="<%= deleteSubscriptionPath(local.id) %>"><input type="submit" value="Eliminar suscripcion" /></form>
-            </section>
-            <% }); %>
-    </div>
-</main>
+<div class="content-area">
+    <h1 class="section-header">Suscripciones</h1>
+</div>
+<div class="content-area">
+    <section>
+        <div class="tbl-header">
+          <table cellpadding="0" cellspacing="0" border="0">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Ubicacion</th>
+                <th>Precio</th>
+                <th>Actividades</th>
+                <th>Local</th>
+                <th>Eliminar</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <div class="tbl-content">
+            <table cellpadding="0" cellspacing="0" border="0">
+                <tbody>
+                    <% listLocals.forEach((local) => { %>
+                        <tr>
+                            <td><%= local.name %></td>
+                            <td><%= local.ubicacion %></td>
+                            <td>$<%= local.precio %></td>
+                            <td><a href="<%= showActivitiesPath(local.id) %>">Actividades</a></td>
+                            <td><a href="<%= showLocalPath(local.id) %>">Ver mas</a></td>
+                            <td><form method="post" action="<%= deleteSubscriptionPath(local.id) %>"><input type="submit" value="Eliminar" class="btn-custom-delete"/></form></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

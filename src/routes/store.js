@@ -30,6 +30,7 @@ async function loadUser(ctx, next) {
 }
 
 async function checkProduct(ctx, next) {
+  console.log('inicio');
   if (ctx.session.currentUser) {
     const productIds = [];
     ctx.state.currentUser.cart.forEach((id) => {
@@ -54,6 +55,7 @@ async function checkProduct(ctx, next) {
     }
     ctx.session.currentUser.cart = ctx.state.currentUser.cart;
   }
+  console.log('final');
   return next();
 }
 
@@ -69,6 +71,7 @@ async function discardProduct(ctx, next) {
 }
 
 async function calculateCart(ctx, next) {
+  console.log('checkproduct');
   if (ctx.session.currentUser) {
     ctx.state.priceCart = 0;
     ctx.state.availableProducts.forEach((product) => {
@@ -236,6 +239,7 @@ router.get('shoppingCart', '/cart', checkProduct, async (ctx) => {
 });
 
 router.get('payProducts', '/pay', checkProduct, calculateCart, async (ctx) => {
+  console.log('here');
   if (ctx.session.currentUser) {
     const { priceCart, availableProducts } = ctx.state;
     await ctx.render('store/submitShop', {
@@ -250,7 +254,8 @@ router.get('payProducts', '/pay', checkProduct, calculateCart, async (ctx) => {
 });
 
 router.post('payingProducts', '/paying', checkProduct, calculateCart, loadSaleData, sendEmailSoldOwners, sendEmailBuyer, sendEmailGetFit, deleteProducts, async (ctx) => {
-  ctx.redirect(ctx.router.url('shoppingCart'));
+  console.log('here');
+  ctx.redirect(ctx.router.url('store'));
 });
 
 router.get('createProduct', '/create', async (ctx) => {

@@ -1,6 +1,9 @@
-<main>
-    <form method='post' action="<%= createRequestPath %>" enctype = "multipart/form-data">
-        <% if (locals.errors){ %>
+<div class="items-table">
+    <h1 class="items-table">Crear producto</h1>
+    <div class="form-main">
+        <div class="form-div">
+            <form method='post' action="<%= createRequestPath %>" enctype = "multipart/form-data">
+            <% if (locals.errors){ %>
             <div class='errors'>
                 <p>El local no se pudo crear debido a los siguientes errores:</p>
                 <ul>
@@ -13,47 +16,51 @@
                 </ul>
             </div>
             <% } %>
+            <div class='field'>
+                <label for='name'>Nombre:</label>
+                <input type="text" name="name" id='name' class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="Ejemplo: Barra olimpica" />
+            </div>
+            <div class='field'>
+                <label for='precio'>Precio:</label>
+                <input type="number" name="precio" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" id='precio' placeholder="Ejemplo: 10000" />
+            </div>
+            <div class='field'>
+                <label for='tipo'>Tipo:</label>
+                <select name="tipo" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input">
+                <option value="Accesorios">Accesorios</option>
+                <option value="Vestuario">Vestuario</option>
+                <option value="Pesas">Pesas</option>
+                <option value="Natacion">Natacion</option>
+                <option value="Montana">Montana</option>
+                <option value="Nutricion">Nutricion</option>
+                <option value="Otros">Otros</option>
+            </select>
+            </div>
+            <div class='field'>
+                <label for='estado'>Estado:</label>
+                <select name="estado" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input">
+                <option value="Nuevo">Nuevo</option>
+                <option value="Semi-nuevo">Semi-nuevo</option>
+                <option value="Usado">Usado</option>
+            </select>
+            </div>
+            <div class='field'>
+                <label for='foto'>Foto:</label>
+                <input type="file" name="foto" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" id='foto' placeholder="Ejemplo: URL" />
+            </div>
+            <div class='field'>
                 <div class='field'>
-                    <label for='name'>Nombre:</label>
-                    <input type="text" name="name" id='name' placeholder="Ejemplo: Barra olimpica" />
+                    <label for='descripcion'>Descripcion:</label>
+                    <textarea name="descripcion" id='descripcion' class="validate[required,custom[onlyLetter],length[0,500]] feedback-input" cols="30" rows="4" placeholder="Ejemplo: Producto de pana"></textarea>
                 </div>
-                <div class='field'>
-                    <label for='precio'>Precio:</label>
-                    <input type="number" name="precio" id='precio' placeholder="Ejemplo: 10000" />
-                </div>
-                <div class='field'>
-                    <label for='tipo'>Tipo:</label>
-                    <select name="tipo">
-                    <option value="Accesorios">Accesorios</option>
-                    <option value="Vestuario">Vestuario</option>
-                    <option value="Pesas">Pesas</option>
-                    <option value="Natacion">Natacion</option>
-                    <option value="Montana">Montana</option>
-                    <option value="Nutricion">Nutricion</option>
-                    <option value="Otros">Otros</option>
-                </select>
-                </div>
-                <div class='field'>
-                    <label for='estado'>Estado:</label>
-                    <select name="estado">
-                    <option value="Nuevo">Nuevo</option>
-                    <option value="Semi-nuevo">Semi-nuevo</option>
-                    <option value="Usado">Usado</option>
-                </select>
-                </div>
-                <div class='field'>
-                    <label for='foto'>Foto:</label>
-                    <input type="file" name="foto" id='foto' placeholder="Ejemplo: URL" />
-                </div>
-                <div class='field'>
-                    <div class='field'>
-                        <label for='descripcion'>Descripcion:</label>
-                        <textarea name="descripcion" id='descripcion' cols="30" rows="4" placeholder="Ejemplo: Producto de pana"></textarea>
-                    </div>
-                </div>
-                <div class='actions'>
-                    <input type='submit' value='Crear' />
-                </div>
-                <a href='<%= storePath %>'> Volver a la tienda</a>
-    </form>
-</main>
+            </div>
+            <div class='actions'>
+                <input type='submit' value='Aceptar' class="btn-link-accept"/>
+            </div>
+            </form>
+        </div>
+    </div>    
+    <div class="display-table-button">
+        <a href='<%= storePath %>' class="btn-custom-back-local">Volver a tienda</a>
+    </div>
+</div>
