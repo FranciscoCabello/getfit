@@ -4,6 +4,7 @@ import App from './components/App';
 import LocalsComments from './components/LocalsComments';
 import SessionChecker from './components/SessionChecker';
 import SearchLocal from './components/SearchLocal';
+import BMR_API from './components/BMR_API';
 
 const reactAppContainer = document.getElementById('react-app');
 
@@ -29,4 +30,10 @@ const reactLocalSearch = document.getElementById("react-local-search");
 
 if (reactLocalSearch) {
   ReactDOM.render(<SearchLocal />, reactLocalSearch);
+}
+
+const reactBMR_API = document.getElementById("react-bmr-api");
+
+if (reactBMR_API) {
+  ReactDOM.render(<BMR_API />, reactBMR_API);
 }
