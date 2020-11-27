@@ -1,3 +1,4 @@
+<% if (locals.currentUser) { %>
 <div class="content-area">
     <div class="content-section-area">
         <div class="items-table">
@@ -69,3 +70,70 @@
 </div>
 <div id="localscomments-app" local_id="<%= local.id %>">
 </div>
+<% } else { %>
+    <div class="content-area">
+        <div class="content-section-area">
+            <div class="items-table">
+                <h1 class="items-table">Informacion</h1>
+                <div class="display-administrable">
+                    <div class="form-div">
+                        <img src="<%= local.photo %>" width="250" height="300"/>
+                    </div>
+                    <div class="form-main">
+                        <div class="form-div">
+                            <form class="form" >
+                                Nombre:
+                                <input name="name" type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" value="<%= local.name %>" id="name" readonly/>
+                                Ubicacion:
+                                <input name="name" type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" value="<%= local.ubicacion %>" id="name" readonly/>
+                                Apertura:
+                                <input name="name" type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" value="<%= local.horarioA %>" id="name" readonly/>
+                                Cierre:
+                                <input name="name" type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" value="<%= local.horarioC %>" id="name" readonly/>
+                                Precio:
+                                <input name="name" type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" value="$<%= local.precio %>" id="name" readonly/>
+    
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-section-area">
+            <div class="items-table">
+                <h1 class="items-table">Actividades</h1>
+                <div class="tbl-header">
+                    <table cellpadding="0" cellspacing="0" border="0">
+                        <thead>
+                            <tr>
+                                <th><p>Nombre</p></th>
+                                <th><p>Dificultad</p></th>
+                                <th><p>Capacidad</p></th>
+                                <th><p>Inscritos</p></th>
+                                <th><p>Inicio</p></th>
+                                <th><p>Termino</p></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="tbl-content">
+                    <table cellpadding="0" cellspacing="0" border="0">
+                        <tbody>
+                            <% activitiesList.forEach((activity) => { %>
+                                <tr>
+                                    <td><%= activity.name %></td>
+                                    <td><%= activity.dificulty %></td>
+                                    <td><%= activity.capacity %></td>
+                                    <td><% if (subscribedAmount(activity.id)) { %><%= subscribedAmount(activity.id) %><% } else { %>0<% } %></td>
+                                    <td><%= activity.horarioI %></td>
+                                    <td><%= activity.horarioT %></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+<% } %>    
+    

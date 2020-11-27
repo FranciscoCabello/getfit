@@ -31,41 +31,43 @@ const IAM_USER_SSKEY = process.env.SECRET_ACCESS_KEY_AWS_STORAGE;
 
 async function uploadFileUsers(ctx, next) {
   const files = ctx.request.files.photo;
-  const myFiles = Array.isArray(files) ? files : typeof files === "object" ? [files] : null;
-  if (myFiles) {
-    try {
-      const filePromises = myFiles.map((file) => {
-        const s3 = new AWS.S3({
-          accessKeyId: IAM_USER_KEY,
-          secretAccessKey: IAM_USER_SSKEY,
-          Bucket: BUCKET_NAME,
-        });
-        const { path, name, type } = file;
-        const body = fs.createReadStream(path);
-        const params = {
-          Bucket: 'getfit-storage/users',
-          Key: name,
-          Body: body,
-          ContentType: type,
-          ACL: 'public-read',
-        };
-        return new Promise((resolve, reject) => {
-          s3.upload(params, (error, data) => {
-            if (error) {
-              reject(error);
-              return next();
-            }
-            console.log(data);
-            resolve(data);
+  if (files.size > 0) {
+    const myFiles = Array.isArray(files) ? files : typeof files === "object" ? [files] : null;
+    if (myFiles) {
+      try {
+        const filePromises = myFiles.map((file) => {
+          const s3 = new AWS.S3({
+            accessKeyId: IAM_USER_KEY,
+            secretAccessKey: IAM_USER_SSKEY,
+            Bucket: BUCKET_NAME,
+          });
+          const { path, name, type } = file;
+          const body = fs.createReadStream(path);
+          const params = {
+            Bucket: 'getfit-storage/users',
+            Key: name,
+            Body: body,
+            ContentType: type,
+            ACL: 'public-read',
+          };
+          return new Promise((resolve, reject) => {
+            s3.upload(params, (error, data) => {
+              if (error) {
+                reject(error);
+                return next();
+              }
+              console.log(data);
+              resolve(data);
+            });
           });
         });
-      });
-      const results = await Promise.all(filePromises);
-      console.log('Results:', results);
-      ctx.request.body.photo = results[0].Location;
-    } catch (error) {
-      console.error(error);
-      ctx.state.error = error;
+        const results = await Promise.all(filePromises);
+        console.log('Results:', results);
+        ctx.request.body.photo = results[0].Location;
+      } catch (error) {
+        console.error(error);
+        ctx.state.error = error;
+      }
     }
   }
   return next();
@@ -209,15 +211,6 @@ router.post('user-login-post', '/loginPost', async (ctx) => {
     const authenticated = await bcrypt.compare(password, user.password);
     if (!authenticated) {
       ctx.redirect(ctx.router.url('users-login'));
-      /*switch (ctx.accepts(['json'])) {
-        case 'json':
-          ctx.status = 201;
-          ctx.body = ['Fail'];
-          break;
-        default:
-          ctx.throw(406);
-          break;
-      }*/
     } else {
       ctx.session.currentUser = {
         id: user.id,
@@ -225,27 +218,9 @@ router.post('user-login-post', '/loginPost', async (ctx) => {
         cart: [],
       };
       ctx.redirect(ctx.router.url('index'));
-      /*switch (ctx.accepts(['json'])) {
-        case 'json':
-          ctx.status = 201;
-          ctx.body = ['Success'];
-          break;
-        default:
-          ctx.throw(406);
-          break;
-      }*/
     }
   } else {
     ctx.redirect(ctx.router.url('users-login'));
-    /*switch (ctx.accepts(['json'])) {
-      case 'json':
-        ctx.status = 201;
-        ctx.body = ['Fail'];
-        break;
-      default:
-        ctx.throw(406);
-        break;
-    }*/
   }
 });
 
@@ -335,6 +310,7 @@ router.get('user-update', '/:id/update', getUser, async (ctx) => {
 
 router.post('user-update-post', '/:id/update/post', getUser, uploadFileUsers, async (ctx) => {
   const { user } = ctx.state;
+  console.log('body', ctx.request.body);
   await user.update(ctx.request.body);
   ctx.redirect(ctx.router.url('userProfile'));
 });

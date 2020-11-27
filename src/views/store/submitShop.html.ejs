@@ -60,22 +60,25 @@
         <div class="form-main">
             <div class="form-div">
                 <%= %>
-                <form method="post" action="<%= endShopping %>">
+                <form method="post" action="<%= endShopping %>" id="pay-form">
                     <div class="form-group owner">
                         <label for="owner">Owner</label>
                         <input type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" id="owner">
+                        <span class="error"></span>
                     </div>
                     <div class="form-group CVV">
                         <label for="cvv">CVV</label>
                         <input type="text"  class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" id="cvv">
+                        <span class="error"></span>
                     </div>
                     <div class="form-group" id="card-number-field">
                         <label for="cardNumber">Card Number</label>
                         <input type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" id="cardNumber">
+                        <span class="error"></span>
                     </div>
                     <div class="form-group" id="expiration-date">
                         <label>Expiration Date</label>
-                        <select class="validate[required,custom[onlyLetter],length[0,100]] feedback-input">
+                        <select class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" id="monthExp">
                                 <option value="01">January</option>
                                 <option value="02">February </option>
                                 <option value="03">March</option>
@@ -89,7 +92,7 @@
                                 <option value="11">November</option>
                                 <option value="12">December</option>
                         </select>
-                        <select class="validate[required,custom[onlyLetter],length[0,100]] feedback-input">
+                        <select class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" id="yearExp">
                                 <option value="16"> 2020</option>
                                 <option value="17"> 2021</option>
                                 <option value="18"> 2022</option>
@@ -117,3 +120,4 @@
         </div>
     </div>
 </div>
+<script src="<%= assetPath('index.js') %>"></script>

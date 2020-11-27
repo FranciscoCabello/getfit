@@ -22,6 +22,22 @@ async function loadActivity(ctx, next) {
   return next();
 }
 
+async function loadActivityRelationUsers(ctx, next) {
+  ctx.state.userActRelation = await ctx.orm.userAct.findAll({
+    where: {
+      actid: ctx.state.activity.id,
+    },
+  });
+  return next();
+}
+
+async function destroyRealtionsActivity(ctx, next) {
+  for (let index = 0; index < ctx.state.userActRelation.length; index++) {
+    await ctx.state.userActRelation[index].destroy();
+  }
+  return next();
+}
+
 async function activities(ctx, next) {
   const searchId = ctx.params.idLocal;
   if (searchId) {
@@ -153,7 +169,7 @@ router.post('editingActivity', '/:idLocal/:idAct/updating', loadActivity, async 
   }
 });
 
-router.post('deleteActivity', '/:idLocal/:idAct/delete', loadActivity, async (ctx) => {
+router.post('deleteActivity', '/:idLocal/:idAct/delete', loadActivity, loadActivityRelationUsers, destroyRealtionsActivity, async (ctx) => {
   const { activity } = ctx.state;
   await activity.destroy();
   ctx.redirect(ctx.router.url('viewLocalOwner', ctx.params.idLocal));
